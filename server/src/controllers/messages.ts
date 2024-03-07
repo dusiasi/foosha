@@ -25,8 +25,6 @@ export const allMessages = async (req: Request, res: Response) => {
     const messages = await MessageModel.find();
     res.status(200);
     res.send(messages);
-    // console.log(req.body);
-    // return res.body;
   } catch (error) {
     console.error();
     res.status(500);
