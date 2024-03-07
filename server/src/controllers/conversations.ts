@@ -1,7 +1,8 @@
 import ConversationModel from '../models/conversations';
+import { Request, Response } from 'express'
 
 // posting new conversation to database
-export const postConversation = async (req, res) => {
+export const postConversation = async (req: Request, res: Response) => {
   try {
     const conversation = req.body;
     const newConversation = new ConversationModel(conversation);
@@ -19,12 +20,12 @@ export const postConversation = async (req, res) => {
 };
 
 // getting all conversations from database
-export const allConversations = async (req, res) => {
+export const allConversations = async (req: Request, res: Response) => {
   try {
     const conversations = await ConversationModel.find();
     res.status(200);
     res.send(conversations);
-    return res.body;
+    // return res.body;
   } catch (error) {
     console.error();
     res.status(500);
@@ -36,7 +37,7 @@ export const allConversations = async (req, res) => {
 };
 
 // getting converation for a certain item and contact
-export const getConversationByItemId = async (req, res) => {
+export const getConversationByItemId = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const contact = req.params.contact;
