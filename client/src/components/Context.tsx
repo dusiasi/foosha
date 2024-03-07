@@ -1,15 +1,23 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { getAllItems } from '../services/itemService'
-import { getAllConversations } from "../services/conversationService";
-import { getAllMessages } from "../services/messageService";
-import { fetchUserLocation } from "../services/mapApiService";
-import { sortByDate } from "../services/utils";
-
+import { createContext, useContext, useState, useEffect } from 'react';
+import { getAllItems } from '../services/itemService';
+import { getAllConversations } from '../services/conversationService';
+import { getAllMessages } from '../services/messageService';
+import { fetchUserLocation } from '../services/mapApiService';
+import { sortByDate } from '../services/utils';
 
 const MainContext = createContext();
 
+type User = {
+  name: string;
+  email: string;
+  password: string;
+  status: string;
+  image: string;
+  preferences: string[];
+};
+
 export default function ContextProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User>({} as User);
   const [list, setList] = useState([]);
   const [conversationList, setConversationList] = useState([]);
   const [messageList, setMessageList] = useState([]);
@@ -19,7 +27,7 @@ export default function ContextProvider({ children }) {
   // fetch location of user
   // fetch data lists
   useEffect(() => {
-    async function fetchAndSet () {
+    async function fetchAndSet() {
       fetchUserLocation(setLocation);
 
       const itemData = await getAllItems();
@@ -38,10 +46,22 @@ export default function ContextProvider({ children }) {
   }, []);
 
   return (
-    <MainContext.Provider value={{ user, setUser, list, setList, conversationList, setConversationList, messageList, setMessageList, location }} >
-      { children }
+    <MainContext.Provider
+      value={{
+        user,
+        setUser,
+        list,
+        setList,
+        conversationList,
+        setConversationList,
+        messageList,
+        setMessageList,
+        location,
+      }}
+    >
+      {children}
     </MainContext.Provider>
-  )
+  );
 }
 
 export function useMainContext() {

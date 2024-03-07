@@ -55,7 +55,7 @@ export const userById = async (req: Request, res: Response) => {
     const user = await UserModel.findById(id);
     res.send(user);
     res.status(200);
-    return res.body;
+    // return res.body;
   } catch (error) {
     console.error(error);
     res.status(500);
