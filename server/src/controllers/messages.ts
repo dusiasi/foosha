@@ -1,7 +1,8 @@
 import MessageModel from '../models/messages';
+import { Request, Response } from 'express';
 
 // posting new message to database
-export const postMessage = async (req, res) => {
+export const postMessage = async (req: Request, res: Response) => {
   try {
     const message = req.body;
     const newMessage = new MessageModel(message);
@@ -19,12 +20,11 @@ export const postMessage = async (req, res) => {
 };
 
 // getting all messages from database
-export const allMessages = async (req, res) => {
+export const allMessages = async (req: Request, res: Response) => {
   try {
     const messages = await MessageModel.find();
     res.status(200);
     res.send(messages);
-    return res.body;
   } catch (error) {
     console.error();
     res.status(500);

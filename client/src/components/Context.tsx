@@ -4,17 +4,12 @@ import { getAllConversations } from '../services/conversationService';
 import { getAllMessages } from '../services/messageService';
 import { fetchUserLocation } from '../services/mapApiService';
 import { sortByDate } from '../services/utils';
+
 const MainContext = createContext();
-type User = {
-  name: string;
-  email: string;
-  password: string;
-  status: string;
-  image: string;
-  preferences: string[];
-};
+
+
 export default function ContextProvider({ children }) {
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState(null);
   const [list, setList] = useState([]);
   const [conversationList, setConversationList] = useState([]);
   const [messageList, setMessageList] = useState([]);
