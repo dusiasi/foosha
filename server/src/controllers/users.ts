@@ -1,9 +1,8 @@
-const UserModel = require('../models/users');
-const bcrypt = require('bcrypt');
-
-
+import UserModel from '../models/users';
+import bcrypt from 'bcrypt';
+import { Request, Response } from 'express';
 // sign up: create a new user
-exports.createUser = async (req, res) => {
+export const createUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const userInDb = await UserModel.findOne({ email: email });
   if (userInDb)
@@ -18,22 +17,30 @@ exports.createUser = async (req, res) => {
       password: hash,
     });
     const user = await newUser.save();
-    res.status(201)
+    res.status(201);
     res.send(user);
   } catch (error) {
-    res.status(400)
+    res.status(400);
     res.send({ error, message: 'Could not create user' });
   }
 };
 
 // getting the logged in user
-exports.login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(401)
+        .send('Bad request: Please provide email and password');
+    }
     const user = await UserModel.findOne({ email: email });
+    if (!user) {
+      return res.status(400).send('No user found');
+    }
     const validatedPass = await bcrypt.compare(password, user.password);
     if (!validatedPass) throw new Error();
-    res.status(200)
+    res.status(200);
     res.send(user);
   } catch (error) {
     res.status(401);
@@ -42,7 +49,7 @@ exports.login = async (req, res) => {
 };
 
 // getting user by id
-exports.userById = async (req, res) => {
+export const userById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const user = await UserModel.findById(id);
@@ -52,32 +59,42 @@ exports.userById = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500);
-    res.send({ message: "An unexpected error occurred while getting the user. Please try again later." });
+    res.send({
+      message:
+        'An unexpected error occurred while getting the user. Please try again later.',
+    });
   }
-}
+};
 
 // edit user details
-exports.editUser = async (req, res) => {
+export const editUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const {name, email, password, status, image, preferences} = req.body;
+    const { name, email, password, status, image, preferences } = req.body;
     const updatedUser = await UserModel.findOneAndUpdate(
-      {_id: id},
-      {$set: {
-        name: name,
-        email: email,
-        password: password,
-        status: status,
-        image: image,
-        preferences: preferences
-    }},
-      {new: true}
+      { _id: id },
+      {
+        $set: {
+          name: name,
+          email: email,
+          password: password,
+          status: status,
+          image: image,
+          preferences: preferences,
+        },
+      },
+      { new: true }
     );
     res.status(201);
     res.send(updatedUser);
   } catch (error) {
     console.error(error);
     res.status(500);
-    res.send({ message: "An unexpected error occurred while editing the user. Please try again later." });
+    res.send({
+      message:
+        'An unexpected error occurred while editing the user. Please try again later.',
+    });
   }
-}
+};
+
+export default { createUser, userById, editUser, login };

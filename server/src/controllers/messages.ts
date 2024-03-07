@@ -1,7 +1,7 @@
-const MessageModel = require('../models/messages');
+import MessageModel from '../models/messages';
 
 // posting new message to database
-exports.postMessage = async (req, res) => {
+export const postMessage = async (req, res) => {
   try {
     const message = req.body;
     const newMessage = new MessageModel(message);
@@ -11,12 +11,15 @@ exports.postMessage = async (req, res) => {
   } catch (error) {
     console.error();
     res.status(500);
-    res.send({ message: "An unexpected error occurred while posting the message. Please try again later." });
+    res.send({
+      message:
+        'An unexpected error occurred while posting the message. Please try again later.',
+    });
   }
-}
+};
 
 // getting all messages from database
-exports.allMessages = async (req, res) => {
+export const allMessages = async (req, res) => {
   try {
     const messages = await MessageModel.find();
     res.status(200);
@@ -25,8 +28,11 @@ exports.allMessages = async (req, res) => {
   } catch (error) {
     console.error();
     res.status(500);
-    res.send({ message: "An unexpected error occurred while getting the messages. Please try again later." });
+    res.send({
+      message:
+        'An unexpected error occurred while getting the messages. Please try again later.',
+    });
   }
-}
+};
 
-
+export default { postMessage, allMessages };

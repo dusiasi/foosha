@@ -1,7 +1,7 @@
-const mongoose = require('./index');
+import mongoose from './index';
 
 // defining data structure
-const Item = new mongoose.Schema ({
+const Item = new mongoose.Schema({
   title: String,
   description: String,
   owner: String,
@@ -10,18 +10,18 @@ const Item = new mongoose.Schema ({
     type: {
       type: String,
       enum: ['Point'],
-      required: true
+      required: true,
     },
     coordinates: {
       type: [Number], // [lng, lat]
-      required: true
-    }
+      required: true,
+    },
   },
   locationName: String,
-  available: {type: Boolean, default: true},
-  image: String
+  available: { type: Boolean, default: true },
+  image: String,
 });
 
 Item.index({ location: '2dsphere' });
 const ItemModel = mongoose.model('items', Item);
-module.exports = ItemModel;
+export default ItemModel;

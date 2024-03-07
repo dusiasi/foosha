@@ -1,8 +1,8 @@
-const express = require("express");
+import express from 'express';
 const app = express();
-const config = require("./config");
-const router = require("./router");
-const cors = require("cors");
+import config from './config';
+import router from './router';
+import cors from 'cors';
 
 // this will allow cors
 app.use(cors());

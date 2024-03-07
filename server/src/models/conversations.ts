@@ -1,18 +1,17 @@
-const mongoose = require('./index');
+import mongoose from './index';
 
 // defining data structure
-const Conversation = new mongoose.Schema ({
+const Conversation = new mongoose.Schema({
   itemName: String, // item name which this conversation is about
-  itemId: String,  // item _id which this conversation is about
+  itemId: String, // item _id which this conversation is about
   itemImage: String, // item image which this conversation is about
   contact: String, // user _id of the contacting person
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   }, // user _id of the item's owner
-  date: { type: Date, default: Date.now() } // date of conversation start
-
+  date: { type: Date, default: Date.now() }, // date of conversation start
 });
 
 const ConversationModel = mongoose.model('conversations', Conversation);
-module.exports = ConversationModel;
+export default ConversationModel;

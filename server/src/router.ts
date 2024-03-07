@@ -1,10 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const controllerUser = require('./controllers/users');
-const controllerItems = require('./controllers/items');
-const controllerMessages = require('./controllers/messages');
-const controllerConversations = require ('./controllers/conversations');
-
+import express from 'express';
+const router = express.Router();
+import controllerUser from './controllers/users';
+import controllerItems from './controllers/items';
+import controllerMessages from './controllers/messages';
+import controllerConversations from './controllers/conversations';
 
 router.post('/user', controllerUser.createUser); // in use
 router.post('/user/login', controllerUser.login); // in use
@@ -22,6 +21,9 @@ router.get('/messages', controllerMessages.allMessages); // in use
 
 router.post('/conversations', controllerConversations.postConversation); // in use
 router.get('/conversations', controllerConversations.allConversations); // in use
-router.get('/conversations/:id/:contact', controllerConversations.getConversationByItemId); // in use
+router.get(
+  '/conversations/:id/:contact',
+  controllerConversations.getConversationByItemId
+); // in use
 
-module.exports = router;
+export default router;
