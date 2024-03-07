@@ -1,9 +1,10 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const config = require('./config');
-const router = require('./router');
-const cors = require('cors');
+const config = require("./config");
+const router = require("./router");
+const cors = require("cors");
 
+// this will allow cors
 app.use(cors());
 
 app.use(express.json());
