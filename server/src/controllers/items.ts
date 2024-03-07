@@ -1,7 +1,38 @@
-import ItemModel from '../models/items';
-
+import ItemModel from "../models/items";
+import { Request, Response } from "express";
+/////////////////////////////////////////////////////
+export type User = {
+  name: string;
+  email: string;
+  password: string;
+  status: string;
+  image: string;
+  preferences: string[];
+};
+//////////////////////////////////////////
+export type Item = {
+  title: String;
+  description: String;
+  owner: String;
+  date: { type: Date };
+  location: {
+    type: {
+      type: String;
+      enum: ["Point"];
+      required: true;
+    };
+    coordinates: {
+      type: [Number]; // [lng, lat]
+      required: true;
+    };
+  };
+  locationName: String;
+  available: { type: Boolean; default: true };
+  image: String;
+};
+/////////////////////////////////////////////////////////
 // posting new item to database
-export const postItem = async (req, res) => {
+export const postItem = async (req: Request, res: Response) => {
   try {
     const { title, description, owner, date, available, locationName, image } =
       req.body;
@@ -10,7 +41,7 @@ export const postItem = async (req, res) => {
       title,
       description,
       location: {
-        type: 'Point',
+        type: "Point",
         coordinates: [lng, lat],
       },
       locationName,
@@ -27,48 +58,47 @@ export const postItem = async (req, res) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while posting the item. Please try again later.',
+        "An unexpected error occurred while posting the item. Please try again later.",
     });
   }
 };
 
 // getting all items from database
-export const allItems = async (req, res) => {
+export const allItems = async (req: Request, res: Response) => {
   try {
     const items = await ItemModel.find();
-    res.send(items);
     res.status(200);
-    return res.body;
+    res.send(items);
+    // return res.body;
   } catch (error) {
     console.error(error);
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while getting the items. Please try again later.',
+        "An unexpected error occurred while getting the items. Please try again later.",
     });
   }
 };
 
 // getting item by id
-export const itemById = async (req, res) => {
+export const itemById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const item = await ItemModel.findById(id);
-    res.send(item);
     res.status(200);
-    return res.body;
+    res.send(item);
   } catch (error) {
     console.error(error);
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while getting the item. Please try again later.',
+        "An unexpected error occurred while getting the item. Please try again later.",
     });
   }
 };
 
 // edit item
-export const editItem = async (req, res) => {
+export const editItem = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const {
@@ -102,24 +132,24 @@ export const editItem = async (req, res) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while editing the item. Please try again later.',
+        "An unexpected error occurred while editing the item. Please try again later.",
     });
   }
 };
 
 // delete item
-export const deleteItem = async (req, res) => {
+export const deleteItem = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     await ItemModel.deleteOne({ _id: id });
     res.status(200);
-    res.send('Item successfully deleted');
+    res.send("Item successfully deleted");
   } catch (error) {
     console.error(error);
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while deleting the item. Please try again later.',
+        "An unexpected error occurred while deleting the item. Please try again later.",
     });
   }
 };
