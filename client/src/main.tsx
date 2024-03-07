@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { createBrowserRouter,RouterProvider } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import Root from './routes/root.jsx';
 import ErrorPage from './routes/error-page.jsx';
@@ -10,38 +10,36 @@ import Messages from './routes/Messages.jsx';
 import ContextProvider from './components/Context.jsx';
 import UserProfile from './routes/UserProfile.jsx';
 
-
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Root />,
-    errorElement: <ErrorPage/>,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: "/items",
-        element: <ItemList/>
+        path: '/items',
+        element: <ItemList />,
       },
       {
-        path: "/items/mine/:userId",
-        element: <MyList/>
+        path: '/items/mine/:userId',
+        element: <MyList />,
       },
       {
-        path: "/messages",
-        element: <Messages/>
+        path: '/messages',
+        element: <Messages />,
       },
       {
-        path: "/user",
-        element: <UserProfile/>
-      }
-    ]
+        path: '/user',
+        element: <UserProfile />,
+      },
+    ],
   },
-
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ContextProvider >
+    <ContextProvider>
       <RouterProvider router={router} />
     </ContextProvider>
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
