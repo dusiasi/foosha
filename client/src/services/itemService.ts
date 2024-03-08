@@ -1,25 +1,14 @@
+import { Item } from '../types';
+import { FormValues } from '../components/MyItem';
 const rootUrl = `${
   import.meta.env.VITE_SERVER || 'http://localhost:4000'
 }/items`;
 const cloudinaryCloudname = import.meta.env.VITE_CLOUDINARY_CLOUDNAME;
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudname}/image/upload`;
 //////////////////////////////////////////////////////////////////////////////
-export type Item = {
-  title: string;
-  description: string;
-  owner: string;
-  date: Date;
-  location: {
-    type: 'Point';
-    coordinates: number[]; // [longitude, latitude]
-  };
-  locationName: string;
-  available: boolean;
-  image?: string; // Optional property
-};
-//////////////////////////////////////////////////////////////////////////////
+
 // post an item to list
-export async function postItem(body: Item) {
+export async function postItem(body: Omit<Item, '_id'>): Promise<Item> {
   try {
     const response = await fetch(rootUrl, {
       method: 'POST',
@@ -32,6 +21,7 @@ export async function postItem(body: Item) {
     return data;
   } catch (error) {
     console.log(error);
+    throw new Error('error posting item');
   }
 }
 
@@ -54,7 +44,7 @@ export async function postImageToCloudinary(body: {
 }
 
 // get all items from database
-export async function getAllItems() {
+export async function getAllItems(): Promise<Item[]> {
   try {
     const response = await fetch(rootUrl, {
       method: 'GET',
@@ -63,11 +53,12 @@ export async function getAllItems() {
     return data;
   } catch (error) {
     console.log(error);
+    throw new Error('error getting all items');
   }
 }
 
 // get only one item from db by id
-export async function getItemById(id: string) {
+export async function getItemById(id: string): Promise<Item> {
   try {
     const response = await fetch(`${rootUrl}/${id}`, {
       method: 'GET',
@@ -76,11 +67,15 @@ export async function getItemById(id: string) {
     return data;
   } catch (error) {
     console.log(error);
+    throw new Error('error getting item');
   }
 }
 
 // edit an item in db
-export async function editItem(id: string, body: Item) {
+export async function editItem(
+  id: string,
+  body: FormValues
+): Promise<FormValues> {
   try {
     const response = await fetch(`${rootUrl}/${id}`, {
       method: 'PUT',
@@ -93,6 +88,7 @@ export async function editItem(id: string, body: Item) {
     return data;
   } catch (error) {
     console.log(error);
+    throw new Error('error editing item');
   }
 }
 

@@ -13,7 +13,7 @@ export type Item = {
   _id: string;
   title: string;
   description: string;
-  owner: string;
+  owner: User;
   date: Date;
   location: {
     coordinates: number[]; // [longitude, latitude]
@@ -24,11 +24,11 @@ export type Item = {
 };
 
 export type initialState = {
-  message: string,
-  author: string,
-  thread: string,
-  dateTime: Date,
-}
+  message: string;
+  author: string;
+  thread: string;
+  dateTime: Date;
+};
 
 export type Message = {
   _id: string;
