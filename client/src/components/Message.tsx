@@ -2,7 +2,7 @@ import './Message.css';
 import { formatDateTime } from '../services/utils';
 import { useMainContext } from "./Context";
 
-function Message ({item}) {
+function Message ({item: }) {
 
   const { user } = useMainContext();
 

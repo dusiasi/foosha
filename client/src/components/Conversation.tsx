@@ -9,7 +9,7 @@ import { getUserById } from "../services/userService";
 import {
   User,
   Item,
-  Conversation,
+  Conversation as ConversationType,
   Location,
   Message as MessageType,
 } from "../types";
@@ -21,7 +21,7 @@ type FormValue = {
   dateTime: number;
 };
 
-function Conversation({ item: conversation }: { item: Conversation }) {
+function Conversation({ item: conversation }: { item: ConversationType }) {
   const [showChat, setShowChat] = useState(false);
   const [messagesByConversation, setMessagesByConversation] = useState<
     MessageType[]
