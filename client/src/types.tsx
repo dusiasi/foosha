@@ -23,6 +23,13 @@ export type Item = {
   image?: string; // Optional property
 };
 
+export type initialState = {
+  message: string,
+  author: string,
+  thread: string,
+  dateTime: Date,
+}
+
 export type Message = {
   _id: string;
   message: string;
