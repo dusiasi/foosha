@@ -96,8 +96,8 @@ function Root() {
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
-                src={user.image}
-              ></button>
+              >
+              </button>
             </Link>
             <h4 className="background-logo">Foosha</h4>
             <button
