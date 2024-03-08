@@ -1,9 +1,11 @@
 import Item from '../components/Item';
 import './ItemList.css';
 import { useMainContext } from '../components/Context';
-import { useEffect } from 'react';
+import { useEffect, FC } from 'react';
 import { calculateDistance } from '../services/utils';
 import Map from '../components/Map';
+
+
 
 function ItemList () {
 
@@ -22,7 +24,7 @@ function ItemList () {
    }
   },[] );
 
-
+//////////////////////////////////////////////////////////
   return (
     <>
       <h2>List</h2>

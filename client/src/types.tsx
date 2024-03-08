@@ -24,6 +24,7 @@ export type Item = {
 };
 
 export type Message = {
+  _id: string;
   message: string;
   author: string; // user _id of sender
   thread: string; // conversation _id which this message is about
@@ -32,6 +33,7 @@ export type Message = {
 };
 
 export type Conversation = {
+  _id: string;
   itemName: string; // item name which this conversation is about
   itemId: string; // item _id which this conversation is about
   itemImage: string; // item image which this conversation is about
