@@ -1,7 +1,7 @@
 import Item from '../components/Item';
 import './ItemList.css';
 import { useMainContext } from '../components/Context';
-import { useEffect, FC } from 'react';
+import { useEffect } from 'react';
 import { calculateDistance } from '../services/utils';
 import Map from '../components/Map';
 
@@ -29,7 +29,7 @@ function ItemList () {
     <>
       <h2>List</h2>
       <div id="item-map" >
-        <Map mapAsInput={false} items={list} zoom={10}></Map>
+        <Map mapAsInput={false} zoom={10}></Map>
       </div>
 
       <div id="item-list-container" >
