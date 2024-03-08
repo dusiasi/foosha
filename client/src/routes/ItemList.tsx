@@ -1,7 +1,7 @@
 import Item from '../components/Item';
 import './ItemList.css';
 import { useMainContext } from '../components/Context';
-import { useEffect, FC } from 'react';
+import { useEffect } from 'react';
 import { calculateDistance } from '../services/utils';
 import Map from '../components/Map';
 
