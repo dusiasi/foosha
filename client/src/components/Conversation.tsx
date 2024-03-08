@@ -9,7 +9,7 @@ import { getUserById } from "../services/userService";
 import {
   User,
   Item,
-  Conversation,
+  Conversation as ConversationType,
   Location,
   Message as MessageType,
 } from "../types";
@@ -21,7 +21,7 @@ type FormValue = {
   dateTime: number;
 };
 
-function Conversation({ item: conversation }: { item: Conversation }) {
+function Conversation({ item: conversation }: { item: ConversationType }) {
   const [showChat, setShowChat] = useState(false);
   const [messagesByConversation, setMessagesByConversation] = useState<
     MessageType[]
@@ -51,7 +51,7 @@ function Conversation({ item: conversation }: { item: Conversation }) {
   }
 
   // send a new message
-  async function submitHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
       async function sendMessage(formValues: FormValue) {
@@ -75,7 +75,7 @@ function Conversation({ item: conversation }: { item: Conversation }) {
 
   // show the contact info on the conversation
   useEffect(() => {
-    async function getOwnerAndContact() {
+    async function getOwnerAndContact(id: string) {
       const itemOwner = await getUserById(conversation.owner);
       const itemContact = await getUserById(conversation.contact);
       const updatedConversationList = conversationList.filter(
@@ -121,15 +121,15 @@ function Conversation({ item: conversation }: { item: Conversation }) {
               )
             )}
           </div>
-          {conversation.owner === user._id ? (
+          {conversation.owner._id === user._id ? ( // changed to _id
             <div id="contact-info">
               <img id="contact-image" src={conversation.contact.image}></img>
               <p id="contact-name">{conversation.contact.name}</p>
             </div>
-          ) : conversation.contact === user._id ? (
+          ) : conversation.contact._id === user._id ? (
             <div id="owner-info">
-              <img id="owner-image" src={conversation.ownerImage}></img>
-              <p id="owner-name">{conversation.ownerName}</p>
+              <img id="owner-image" src={conversation.owner.image}></img>
+              <p id="owner-name">{conversation.owner.name}</p>
             </div>
           ) : null}
         </div>
