@@ -1,18 +1,40 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, FC, Dispatch, SetStateAction } from 'react';
 import './Item.css';
 import { FaLocationDot } from 'react-icons/fa6';
 import { FaCommentDots } from 'react-icons/fa6';
 import { formatDate } from '../services/utils';
 import ContactForm from './ContactForm';
 
-function Item ({item}) {
+///////////////////////////////////////////////////
+export type Item = {
+  title: string;
+  description: string;
+  owner: string;
+  date: Date;
+  location: {
+    type: "Point";
+    coordinates: number[]; // [longitude, latitude]
+  };
+  locationName: string;
+  available: boolean;
+  image?: string; // Optional property
+};
+///////////////////////////////////////////////
 
+type ItemProps ={
+  item:Item
+}
+
+const Item : FC<ItemProps> = ({item})=> {
+// function Item({item}:ItemProps) {
   const [showContactForm, setShowContactForm] = useState(false);
   const itemRef = useRef(null);
 
   useEffect(() => {
     if (showContactForm) {
-      itemRef.current.scrollIntoView({behaviour: 'smooth', block: 'nearest'})
+      if(itemRef.current) {
+        itemRef.current.scrollIntoView({behaviour: 'smooth', block: 'nearest'})
+      }
     }
   }, [showContactForm])
 

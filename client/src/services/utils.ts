@@ -8,10 +8,10 @@ export function formatDate(dateString: Date) {
 }
 
 // format date time for messages and conversations
-export function formatDateTime(dateString:Date) {
+export function formatDateTime(dateString: Date) {
   const date = new Date(dateString);
-  const hour = String(date.getHours()).padStart(2, '0');
-  const min = String(date.getMinutes()).padStart(2, '0');
+  const hour = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -19,11 +19,12 @@ export function formatDateTime(dateString:Date) {
 }
 
 // sort data arrays by date
-export function sortByDate(array, dateProperty) {
+export function sortByDate(array: any[], dateProperty: string) {
   return array.sort((a, b) => {
     let dateA = new Date(a[dateProperty]);
     let dateB = new Date(b[dateProperty]);
-    return dateA - dateB;
+    return Number(dateA) - Number(dateB); // check if this is working.
+    //code before: dateA - dateB
   });
 }
 

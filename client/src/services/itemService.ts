@@ -5,24 +5,17 @@ const cloudinaryCloudname = import.meta.env.VITE_CLOUDINARY_CLOUDNAME;
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudname}/image/upload`;
 //////////////////////////////////////////////////////////////////////////////
 export type Item = {
-  title: String;
-  description: String;
-  owner: String;
-  date: { type: Date };
+  title: string;
+  description: string;
+  owner: string;
+  date: Date;
   location: {
-    type: {
-      type: String;
-      enum: ["Point"];
-      required: true;
-    };
-    coordinates: {
-      type: [Number]; // [lng, lat]
-      required: true;
-    };
+    type: "Point";
+    coordinates: number[]; // [longitude, latitude]
   };
-  locationName: String;
-  available: { type: Boolean; default: true };
-  image: String;
+  locationName: string;
+  available: boolean;
+  image?: string; // Optional property
 };
 //////////////////////////////////////////////////////////////////////////////
 // post an item to list
