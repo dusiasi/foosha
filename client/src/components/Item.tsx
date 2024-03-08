@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, FC, Dispatch, SetStateAction } from 'react';
 import './Item.css';
 import { FaLocationDot } from 'react-icons/fa6';
 import { FaCommentDots } from 'react-icons/fa6';
@@ -21,14 +21,20 @@ export type Item = {
 };
 ///////////////////////////////////////////////
 
-function Item({item}) {
+type ItemProps ={
+  item:Item
+}
 
+const Item : FC<ItemProps> = ({item})=> {
+// function Item({item}:ItemProps) {
   const [showContactForm, setShowContactForm] = useState(false);
   const itemRef = useRef(null);
 
   useEffect(() => {
     if (showContactForm) {
-      itemRef.current.scrollIntoView({behaviour: 'smooth', block: 'nearest'})
+      if(itemRef.current) {
+        itemRef.current.scrollIntoView({behaviour: 'smooth', block: 'nearest'})
+      }
     }
   }, [showContactForm])
 
