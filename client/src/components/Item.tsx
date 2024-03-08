@@ -5,7 +5,23 @@ import { FaCommentDots } from 'react-icons/fa6';
 import { formatDate } from '../services/utils';
 import ContactForm from './ContactForm';
 
-function Item ({item}) {
+///////////////////////////////////////////////////
+export type Item = {
+  title: string;
+  description: string;
+  owner: string;
+  date: Date;
+  location: {
+    type: "Point";
+    coordinates: number[]; // [longitude, latitude]
+  };
+  locationName: string;
+  available: boolean;
+  image?: string; // Optional property
+};
+///////////////////////////////////////////////
+
+function Item({item}) {
 
   const [showContactForm, setShowContactForm] = useState(false);
   const itemRef = useRef(null);
