@@ -16,16 +16,19 @@ export type Item = {
   owner: string;
   date: Date;
   location: {
-<<<<<<< HEAD
-=======
-    type: "Point";
->>>>>>> e728f8602be7cea86136e9056a8a36577713e993
     coordinates: number[]; // [longitude, latitude]
   };
   locationName: string;
   available: boolean;
   image?: string; // Optional property
 };
+
+export type initialState = {
+  message: string,
+  author: string,
+  thread: string,
+  dateTime: Date,
+}
 
 export type Message = {
   _id: string;
