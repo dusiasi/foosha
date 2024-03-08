@@ -4,31 +4,41 @@ import './UserProfile.css';
 import { updateUser } from '../services/userService';
 import { postImageToCloudinary } from '../services/itemService';
 
+export type FormValuesUserProfile = {
+  name: string;
+  email: string;
+  preferences: string[];
+  image: string;
+};
+
+const initialFormState = {
+  name: '',
+  email: '',
+  preferences: [],
+  image: '',
+};
+
 function UserProfile() {
   const { user, setUser } = useMainContext();
-  const [formValues, setFormValues] = useState({
-    name: user.name || '',
-    email: user.email || '',
-    preferences: user.preferences || [],
-    image: user.image || '',
-  });
-  const [imageFile, setImageFile] = useState(null);
+  const [FormValuesUserProfile, setFormValuesUserProfile] =
+    useState<FormValuesUserProfile>(initialFormState);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Handle changes for all inputs
 
   function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked, files } = e.target;
     if (type === 'checkbox') {
-      setFormValues((prevValues) => {
+      setFormValuesUserProfile((prevValues) => {
         const newPreferences = checked
           ? [...prevValues.preferences, name] // add preference
           : prevValues.preferences.filter((preference) => preference !== name); // remove preference
         return { ...prevValues, preferences: newPreferences };
       });
     } else if (type === 'file') {
-      setImageFile(files[0]);
+      files && setImageFile(files[0]);
     } else {
-      setFormValues((prevValues) => ({
+      setFormValuesUserProfile((prevValues) => ({
         ...prevValues,
         [name]: value,
       }));
@@ -36,28 +46,28 @@ function UserProfile() {
   }
 
   // Submit handler
-  async function submitHandler(e) {
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let imageUrl = '';
     if (imageFile) {
       try {
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        formData.append('upload_preset', 'nwvjjpdw');
-        imageUrl = await postImageToCloudinary(formData);
+        imageUrl = await postImageToCloudinary({
+          file: imageFile,
+          upload_preset: 'nwvjjpdw',
+        });
       } catch (error) {
         console.error(error);
       }
     }
 
     const newUserData = {
-      ...formValues,
+      ...FormValuesUserProfile,
       image: imageUrl,
     };
 
     try {
       const updatedUser = await updateUser(user._id, newUserData);
-      setFormValues(updatedUser);
+      setFormValuesUserProfile(updatedUser);
       setUser(updatedUser);
     } catch (error) {
       console.error(error);
@@ -75,7 +85,7 @@ function UserProfile() {
           <input
             type="text"
             name="name"
-            value={formValues.name}
+            value={FormValuesUserProfile.name}
             required={true}
             onChange={changeHandler}
           ></input>
@@ -84,7 +94,7 @@ function UserProfile() {
           <input
             type="email"
             name="email"
-            value={formValues.email}
+            value={FormValuesUserProfile.email}
             required={true}
             onChange={changeHandler}
           ></input>
@@ -104,7 +114,9 @@ function UserProfile() {
                 type="checkbox"
                 id="vegetarian"
                 name="vegetarian"
-                checked={formValues.preferences.includes('vegetarian')}
+                checked={FormValuesUserProfile.preferences.includes(
+                  'vegetarian'
+                )}
                 onChange={changeHandler}
               />
               <label>vegetarian</label>
@@ -115,7 +127,7 @@ function UserProfile() {
                 type="checkbox"
                 id="vegan"
                 name="vegan"
-                checked={formValues.preferences.includes('vegan')}
+                checked={FormValuesUserProfile.preferences.includes('vegan')}
                 onChange={changeHandler}
               />
               <label>vegan</label>
@@ -126,7 +138,9 @@ function UserProfile() {
                 type="checkbox"
                 id="pescetarian"
                 name="pescetarian"
-                checked={formValues.preferences.includes('pescetarian')}
+                checked={FormValuesUserProfile.preferences.includes(
+                  'pescetarian'
+                )}
                 onChange={changeHandler}
               />
               <label>pescetarian</label>
@@ -137,7 +151,9 @@ function UserProfile() {
                 type="checkbox"
                 id="gluten-free"
                 name="gluten-free"
-                checked={formValues.preferences.includes('gluten-free')}
+                checked={FormValuesUserProfile.preferences.includes(
+                  'gluten-free'
+                )}
                 onChange={changeHandler}
               />
               <label>gluten free</label>
@@ -148,7 +164,7 @@ function UserProfile() {
                 type="checkbox"
                 id="omnivore"
                 name="omnivore"
-                checked={formValues.preferences.includes('omnivore')}
+                checked={FormValuesUserProfile.preferences.includes('omnivore')}
                 onChange={changeHandler}
               />
               <label>omnivore</label>

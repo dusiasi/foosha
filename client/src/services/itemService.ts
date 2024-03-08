@@ -1,5 +1,5 @@
 const rootUrl = `${
-  import.meta.env.VITE_SERVER || "http://localhost:3000"
+  import.meta.env.VITE_SERVER || 'http://localhost:3000'
 }/items`;
 const cloudinaryCloudname = import.meta.env.VITE_CLOUDINARY_CLOUDNAME;
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudname}/image/upload`;
@@ -10,7 +10,7 @@ export type Item = {
   owner: string;
   date: Date;
   location: {
-    type: "Point";
+    type: 'Point';
     coordinates: number[]; // [longitude, latitude]
   };
   locationName: string;
@@ -22,9 +22,9 @@ export type Item = {
 export async function postItem(body: Item) {
   try {
     const response = await fetch(rootUrl, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
@@ -36,16 +36,20 @@ export async function postItem(body: Item) {
 }
 
 // post the image of an item or user to cloudinary
-export async function postImageToCloudinary(body: File) {
+export async function postImageToCloudinary(body: {
+  file: File;
+  upload_preset: string;
+}): Promise<string> {
   try {
     const response = await fetch(cloudinaryUrl, {
-      method: "POST",
-      body: body,
+      method: 'POST',
+      body: JSON.stringify(body),
     });
     const data = await response.json();
     return data.secure_url;
   } catch (error) {
     console.log(error);
+    throw new Error('error posting image');
   }
 }
 
@@ -53,7 +57,7 @@ export async function postImageToCloudinary(body: File) {
 export async function getAllItems() {
   try {
     const response = await fetch(rootUrl, {
-      method: "GET",
+      method: 'GET',
     });
     const data = await response.json();
     return data;
@@ -66,7 +70,7 @@ export async function getAllItems() {
 export async function getItemById(id: string) {
   try {
     const response = await fetch(`${rootUrl}/${id}`, {
-      method: "GET",
+      method: 'GET',
     });
     const data = await response.json();
     return data;
@@ -79,9 +83,9 @@ export async function getItemById(id: string) {
 export async function editItem(id: string, body: Item) {
   try {
     const response = await fetch(`${rootUrl}/${id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
@@ -96,9 +100,9 @@ export async function editItem(id: string, body: Item) {
 export async function deleteItem(id: string) {
   try {
     const response = await fetch(`${rootUrl}/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     return response;

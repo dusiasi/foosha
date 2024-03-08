@@ -3,14 +3,13 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 // sign up: create a new user
 export const createUser = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  console.log('calling', req.body);
-  const userInDb = await UserModel.findOne({ email: email });
-  if (userInDb)
-    return res
-      .status(409)
-      .send({ error: '409', message: 'User already exists' });
   try {
+    const { email, password } = req.body;
+    const userInDb = await UserModel.findOne({ email: email });
+    if (userInDb)
+      return res
+        .status(409)
+        .send({ error: '409', message: 'User already exists' });
     if (password === '') throw new Error();
     const hash = await bcrypt.hash(password, 10);
     const newUser = new UserModel({
