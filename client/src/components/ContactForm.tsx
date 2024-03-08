@@ -1,25 +1,26 @@
-import { useState } from "react";
+import { Dispatch, useState, SetStateAction } from "react";
 import './ContactForm.css';
 import { getConversationByItemId, postConversation } from "../services/conversationService";
 import { useMainContext } from "./Context";
 import { postMessage } from "../services/messageService";
-import { Item } from "../types";
+import { Item, Message } from "../types";
 import { initialState as initialStateType } from "../types";
 
  type propsType = {
   item: Item,
-  setShowContactForm: boolean,
+  setShowContactForm: Dispatch<SetStateAction<boolean>>,
 }
 
 function ContactForm({item, setShowContactForm}: propsType) {
 
   const { user, setConversationList, setMessageList } = useMainContext();
 
-  const initialState = {
+  const initialState:Message = {
     message: '',
     author: user._id,
     thread: '',
-    dateTime: Date.now()
+    read: false, // added
+    dateTime: Date.now(),
   }
 
   const [formValues, setFormValues] = useState(initialState);
@@ -34,7 +35,7 @@ function ContactForm({item, setShowContactForm}: propsType) {
   async function submitHandler (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-    async function createConversationAndMessage (formValues: React.FormEvent<HTMLFormElement>) {
+    async function createConversationAndMessage (formValues: Message) {
 
       // Is there already a conversation for this item?
       const conversationInDb = await getConversationByItemId(item._id, user._id);
