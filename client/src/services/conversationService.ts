@@ -1,22 +1,24 @@
-import { Conversation } from "../types";
+import { Conversation, Item } from "../types";
 
-const rootUrl = `${import.meta.env.VITE_SERVER || 'http://localhost:3000'}/conversations`;
+const rootUrl = `${import.meta.env.VITE_SERVER || 'http://localhost:4000'}/conversations`;
 
 
-export async function postConversation (body) {
+export async function postConversation(body: Conversation): Promise<Conversation[]> {
   try {
     const response = await fetch(rootUrl, {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  })
-  const data = await response.json();
-  return data;
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log(error);
-}};
+    throw new Error("error posting conversation")
+  }
+};
 
 
 export async function getAllConversations ():Promise<Conversation[]> {
@@ -32,7 +34,7 @@ export async function getAllConversations ():Promise<Conversation[]> {
 }};
 
 
-export async function getConversationByItemId (id, contact) {
+export async function getConversationByItemId (id:string, contact:Conversation):Promise<Conversation[]> {
   try   {
     const response = await fetch(`${rootUrl}/${id}/${contact}`, {
     method: 'GET'
@@ -41,4 +43,5 @@ export async function getConversationByItemId (id, contact) {
   return data;
   } catch (error) {
     console.log(error);
+    throw new Error("error getting conversation")
 }};

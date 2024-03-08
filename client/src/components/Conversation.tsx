@@ -15,13 +15,15 @@ import {
 } from "../types";
 
 type FormValue = {
+  _id: string;
   message: string;
   author: string;
   thread: string;
+  read: boolean;
   dateTime: number;
 };
 
-function Conversation({ item: conversation }: { item: Item }) {
+function Conversation({ item: conversation }: { item: ConversationType }) {
   const [showChat, setShowChat] = useState(false);
   const [messagesByConversation, setMessagesByConversation] = useState<
     MessageType[]
@@ -35,9 +37,11 @@ function Conversation({ item: conversation }: { item: Item }) {
     conversationList,
   } = useMainContext();
 
-  const initialState = {
+  const initialState: FormValue ={
+    _id: "",
     message: "",
     author: user._id,
+    read: false,
     thread: conversation._id,
     dateTime: Date.now(),
   };
@@ -76,8 +80,8 @@ function Conversation({ item: conversation }: { item: Item }) {
   // show the contact info on the conversation
   useEffect(() => {
     async function getOwnerAndContact(id: string) {
-      const itemOwner = await getUserById(conversation.owner);
-      const itemContact = await getUserById(conversation.contact);
+      const itemOwner = await getUserById(conversation.owner._id);
+      const itemContact = await getUserById(conversation.contact._id);
       const updatedConversationList = conversationList.filter(
         (convo) => convo._id !== conversation._id
       );

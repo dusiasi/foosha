@@ -14,6 +14,7 @@ import { fetchUserLocation } from '../services/mapApiService';
 import { sortByDate } from '../services/utils';
 import { User, Item, Message, Conversation, Location } from '../types';
 
+
 type MainContext = {
   user: User;
   setUser: Dispatch<SetStateAction<User>>;

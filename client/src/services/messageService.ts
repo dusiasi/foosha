@@ -1,17 +1,21 @@
+import { Message } from "../types";
+
 const rootUrl = `${import.meta.env.VITE_SERVER || 'http://localhost:3000'}/messages`;
 
-export async function getAllMessages () {
-  try   {
+export async function getAllMessages(): Promise<Message[]> {
+  try {
     const response = await fetch(rootUrl, {
-    method: 'GET'
-  })
-  const data = await response.json();
-  return data;
+      method: "GET",
+    });
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log(error);
-}};
+    throw new Error ("error getting messages")
+  }
+};
 
-export async function postMessage (body) {
+export async function postMessage (body: Message):Promise<Message> {
   try {
     const response = await fetch(rootUrl, {
     method: 'POST',
@@ -24,4 +28,5 @@ export async function postMessage (body) {
   return data;
   } catch (error) {
     console.log(error);
+    throw new Error ("Error posting message")
 }};
