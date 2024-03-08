@@ -6,9 +6,9 @@ import Message from "./Message";
 import { useMainContext } from "./Context";
 import { formatDateTime } from "../services/utils";
 import { getUserById } from "../services/userService";
+import { User, Item, Conversation, Location } from "../types"
 
-
-function Conversation ({item}) {
+function Conversation({ item }: { item: Item }) {
   const [showChat, setShowChat] = useState(false);
   const [messagesByConversation, setMessagesByConversation] = useState([]);
   const { user, messageList, setMessageList } = useMainContext();
@@ -17,22 +17,22 @@ function Conversation ({item}) {
     message: "",
     author: user._id,
     thread: item._id,
-    dateTime: Date.now()
-  }
+    dateTime: Date.now(),
+  };
 
   const [formValues, setFormValues] = useState(initialState);
 
   // changes in the form
-  function changeHandler (e) {
+  function changeHandler(e) {
     const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value});
+    setFormValues({ ...formValues, [name]: value });
   }
 
   // send a new message
-  async function submitHandler (e) {
+  async function submitHandler(e) {
     e.preventDefault();
     try {
-      async function sendMessage (formValues) {
+      async function sendMessage(formValues) {
         const newMessage = await postMessage(formValues);
         setMessageList((prevList) => [...prevList, newMessage]);
         setFormValues(initialState);
@@ -41,95 +41,112 @@ function Conversation ({item}) {
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   // show the messages belonging to each conversation
 
   useEffect(() => {
-    const filteredMessages = messageList.filter(elem => elem.thread === item._id);
+    const filteredMessages = messageList.filter(
+      (elem) => elem.thread === item._id
+    );
     setMessagesByConversation(filteredMessages);
-  }, [messageList])
+  }, [messageList]);
 
   // show the contact info on the conversation
   useEffect(() => {
-    async function getOwnerAndContact () {
+    async function getOwnerAndContact() {
       const itemOwner = await getUserById(item.owner);
       const itemContact = await getUserById(item.contact);
-      item.contactImage = itemContact.image || '';
-      item.ownerImage = itemOwner.image || '';
+      item.contactImage = itemContact.image || "";
+      item.ownerImage = itemOwner.image || "";
       item.contactName = itemContact.name;
       item.ownerName = itemOwner.name;
-    };
-    getOwnerAndContact(item._id)
-  })
+    }
+    getOwnerAndContact(item._id);
+  });
 
   return (
     <>
-    <div id="thread-with-chat" >
-      <div id="thread" >
-        <img src={item.itemImage} id="thread-image" />
-        <div id="thread-info">
-          <h3>{item.itemName}</h3>
-          {
-            messagesByConversation.map(
-              (elem, i) =>
-              i === messagesByConversation.length - 1 ?
-              <div id="last-message-info" key={elem._id} >
-                <p> {messagesByConversation.length} message{messagesByConversation.length > 1 ? 's' : ''} </p>
-                <p >last message: {formatDateTime(elem.dateTime)}</p>
-                {
-                  elem.author != user._id ? <p id="your-turn-badge" >{'your turn!'}</p> : ''
-                }
-              </div>
-            : ''
-            )
-          }
-        </div>
-        {
-           item.owner === user._id ?
-           <div id="contact-info" >
-             <img  id="contact-image" src={item.contactImage}></img>
-             <p id="contact-name"  >{item.contactName}</p>
-           </div>
-
-           : item.contact === user._id ?
-           <div id="owner-info">
-            <img id="owner-image" src={item.ownerImage}></img>
-            <p id="owner-name"  >{item.ownerName}</p>
-           </div>
-           : null
-        }
+      <div id="thread-with-chat">
+        <div id="thread">
+          <img src={item.itemImage} id="thread-image" />
+          <div id="thread-info">
+            <h3>{item.itemName}</h3>
+            {messagesByConversation.map((elem, i) =>
+              i === messagesByConversation.length - 1 ? (
+                <div id="last-message-info" key={elem._id}>
+                  <p>
+                    {" "}
+                    {messagesByConversation.length} message
+                    {messagesByConversation.length > 1 ? "s" : ""}{" "}
+                  </p>
+                  <p>last message: {formatDateTime(elem.dateTime)}</p>
+                  {elem.author != user._id ? (
+                    <p id="your-turn-badge">{"your turn!"}</p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                ""
+              )
+            )}
+          </div>
+          {item.owner === user._id ? (
+            <div id="contact-info">
+              <img id="contact-image" src={item.contactImage}></img>
+              <p id="contact-name">{item.contactName}</p>
+            </div>
+          ) : item.contact === user._id ? (
+            <div id="owner-info">
+              <img id="owner-image" src={item.ownerImage}></img>
+              <p id="owner-name">{item.ownerName}</p>
+            </div>
+          ) : null}
         </div>
         <div>
-          <button id="chat-toggle-button" onClick={() => setShowChat(!showChat)} >{showChat ? 'hide chat ' : 'show chat '}<FaCommentDots></FaCommentDots> </button>
-        {
-          showChat ? (
-            <div id="chat"
+          <button
+            id="chat-toggle-button"
+            onClick={() => setShowChat(!showChat)}
+          >
+            {showChat ? "hide chat " : "show chat "}
+            <FaCommentDots></FaCommentDots>{" "}
+          </button>
+          {showChat ? (
+            <div
+              id="chat"
               style={{
-                ...(item.itemImage && { backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${item.itemImage})`}),
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-
-              }} >
+                ...(item.itemImage && {
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${item.itemImage})`,
+                }),
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
               <div id="chat-bubbles">
-            {
-              messagesByConversation.map(elem => <Message key={elem._id} item={elem} ></Message>)
-            }
-            </div>
+                {messagesByConversation.map((elem) => (
+                  <Message key={elem._id} item={elem}></Message>
+                ))}
+              </div>
               <form id="chat-form" onSubmit={submitHandler}>
-                <input type="text" name="message" value={formValues.message} onChange={changeHandler} placeholder="Be nice!"
+                <input
+                  type="text"
+                  name="message"
+                  value={formValues.message}
+                  onChange={changeHandler}
+                  placeholder="Be nice!"
                 />
-                 <button className="save-button button-turqouise" type="submit">Send</button>
+                <button className="save-button button-turqouise" type="submit">
+                  Send
+                </button>
               </form>
-          </div>
-          ) : null
-        }
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
-  </>
-  )
-
+    </>
+  );
 }
 
 export default Conversation;
