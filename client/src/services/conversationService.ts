@@ -1,3 +1,5 @@
+import { Conversation } from "../types";
+
 const rootUrl = `${import.meta.env.VITE_SERVER || 'http://localhost:3000'}/conversations`;
 
 
@@ -17,7 +19,7 @@ export async function postConversation (body) {
 }};
 
 
-export async function getAllConversations () {
+export async function getAllConversations ():Promise<Conversation[]> {
   try   {
     const response = await fetch(rootUrl, {
     method: 'GET'
@@ -26,6 +28,7 @@ export async function getAllConversations () {
   return data;
   } catch (error) {
     console.log(error);
+    throw new Error("error getting conversation")
 }};
 
 
