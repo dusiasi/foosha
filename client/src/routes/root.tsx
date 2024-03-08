@@ -16,6 +16,9 @@ type User = {
   name: string;
   email: string;
   password: string;
+  status: string;
+  image: string;
+  preferences: string[];
 };
 
 const initialState = {
