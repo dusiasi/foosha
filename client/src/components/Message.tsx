@@ -9,7 +9,7 @@ import {
   Message as MessageType,
 } from "../types";
 
-function Message({ item: conversation }: { item: ConversationType }) {
+function Message({ item: item }: { item: MessageType}) {
   const { user } = useMainContext();
 
   return (
