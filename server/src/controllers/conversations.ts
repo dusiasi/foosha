@@ -22,7 +22,7 @@ export const postConversation = async (req: Request, res: Response) => {
 // getting all conversations from database
 export const allConversations = async (req: Request, res: Response) => {
   try {
-    const conversations = await ConversationModel.find();
+    const conversations = await ConversationModel.find() ;
     res.status(200);
     res.send(conversations);
     // return res.body;

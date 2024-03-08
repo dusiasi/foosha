@@ -8,6 +8,7 @@ export type User = {
   preferences: string[];
 };
 
+// FOOD ITEM
 export type Item = {
   _id: string;
   title: string;

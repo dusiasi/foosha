@@ -1,38 +1,60 @@
 import { useEffect, useState } from "react";
 import { postMessage } from "../services/messageService";
-import { FaCommentDots, FaUser } from 'react-icons/fa6';
-import './Conversation.css'
+import { FaCommentDots, FaUser } from "react-icons/fa6";
+import "./Conversation.css";
 import Message from "./Message";
 import { useMainContext } from "./Context";
 import { formatDateTime } from "../services/utils";
 import { getUserById } from "../services/userService";
-import { User, Item, Conversation, Location } from "../types"
+import {
+  User,
+  Item,
+  Conversation,
+  Location,
+  Message as MessageType,
+} from "../types";
 
-function Conversation({ item }: { item: Item }) {
+type FormValue = {
+  message: string;
+  author: string;
+  thread: string;
+  dateTime: number;
+};
+
+function Conversation({ item: conversation }: { item: Conversation }) {
   const [showChat, setShowChat] = useState(false);
-  const [messagesByConversation, setMessagesByConversation] = useState([]);
-  const { user, messageList, setMessageList } = useMainContext();
+  const [messagesByConversation, setMessagesByConversation] = useState<
+    MessageType[]
+  >([]);
+
+  const {
+    user,
+    messageList,
+    setMessageList,
+    setConversationList,
+    conversationList,
+  } = useMainContext();
 
   const initialState = {
     message: "",
     author: user._id,
-    thread: item._id,
+    thread: conversation._id,
     dateTime: Date.now(),
   };
 
-  const [formValues, setFormValues] = useState(initialState);
+  const [formValues, setFormValues] = useState<FormValue>(initialState);
 
   // changes in the form
-  function changeHandler(e) {
+  function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   }
 
   // send a new message
-  async function submitHandler(e) {
+  async function submitHandler(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     try {
-      async function sendMessage(formValues) {
+      async function sendMessage(formValues: FormValue) {
         const newMessage = await postMessage(formValues);
         setMessageList((prevList) => [...prevList, newMessage]);
         setFormValues(initialState);
@@ -44,10 +66,9 @@ function Conversation({ item }: { item: Item }) {
   }
 
   // show the messages belonging to each conversation
-
   useEffect(() => {
     const filteredMessages = messageList.filter(
-      (elem) => elem.thread === item._id
+      (elem) => elem.thread === conversation._id
     );
     setMessagesByConversation(filteredMessages);
   }, [messageList]);
@@ -55,23 +76,31 @@ function Conversation({ item }: { item: Item }) {
   // show the contact info on the conversation
   useEffect(() => {
     async function getOwnerAndContact() {
-      const itemOwner = await getUserById(item.owner);
-      const itemContact = await getUserById(item.contact);
-      item.contactImage = itemContact.image || "";
-      item.ownerImage = itemOwner.image || "";
-      item.contactName = itemContact.name;
-      item.ownerName = itemOwner.name;
+      const itemOwner = await getUserById(conversation.owner);
+      const itemContact = await getUserById(conversation.contact);
+      const updatedConversationList = conversationList.filter(
+        (convo) => convo._id !== conversation._id
+      );
+      setConversationList([
+        ...updatedConversationList,
+        { ...conversation, contact: itemContact, owner: itemOwner },
+      ]);
+
+      // item.contactImage = itemContact.image || "";
+      // item.ownerImage = itemOwner.image || "";
+      // item.contactName = itemContact.name;
+      // item.ownerName = itemOwner.name;
     }
-    getOwnerAndContact(item._id);
-  });
+    getOwnerAndContact(conversation._id);
+  }, []);
 
   return (
     <>
       <div id="thread-with-chat">
         <div id="thread">
-          <img src={item.itemImage} id="thread-image" />
+          <img src={conversation.itemImage} id="thread-image" />
           <div id="thread-info">
-            <h3>{item.itemName}</h3>
+            <h3>{conversation.itemName}</h3>
             {messagesByConversation.map((elem, i) =>
               i === messagesByConversation.length - 1 ? (
                 <div id="last-message-info" key={elem._id}>
@@ -92,15 +121,15 @@ function Conversation({ item }: { item: Item }) {
               )
             )}
           </div>
-          {item.owner === user._id ? (
+          {conversation.owner === user._id ? (
             <div id="contact-info">
-              <img id="contact-image" src={item.contactImage}></img>
-              <p id="contact-name">{item.contactName}</p>
+              <img id="contact-image" src={conversation.contact.image}></img>
+              <p id="contact-name">{conversation.contact.name}</p>
             </div>
-          ) : item.contact === user._id ? (
+          ) : conversation.contact === user._id ? (
             <div id="owner-info">
-              <img id="owner-image" src={item.ownerImage}></img>
-              <p id="owner-name">{item.ownerName}</p>
+              <img id="owner-image" src={conversation.ownerImage}></img>
+              <p id="owner-name">{conversation.ownerName}</p>
             </div>
           ) : null}
         </div>
@@ -116,8 +145,8 @@ function Conversation({ item }: { item: Item }) {
             <div
               id="chat"
               style={{
-                ...(item.itemImage && {
-                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${item.itemImage})`,
+                ...(conversation.itemImage && {
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${conversation.itemImage})`,
                 }),
                 backgroundSize: "cover",
                 backgroundPosition: "center",

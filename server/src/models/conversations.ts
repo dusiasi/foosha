@@ -8,9 +8,17 @@ export type ConversationType = InferSchemaType<typeof Conversation>;
 // defining data structure
 const Conversation = new mongoose.Schema({
   itemName: String, // item name which this conversation is about
-  itemId: String, // item _id which this conversation is about
+  itemId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Item",
+    required: true,
+  }, // item _id which this conversation is about
   itemImage: String, // item image which this conversation is about
-  contact: String, // user _id of the contacting person
+  contact: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  }, // user _id of the contacting person
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

@@ -17,22 +17,19 @@ import { User, Item, Message, Conversation, Location } from '../types';
 type MainContext = {
   user: User;
   setUser: Dispatch<SetStateAction<User>>;
-  list: List;
-  setList: Dispatch<SetStateAction<List>>;
-  conversationList: ConversationList;
-  setConversationList: Dispatch<SetStateAction<ConversationList>>;
-  messageList: MessageList;
-  setMessageList: Dispatch<SetStateAction<MessageList>>;
+  list: Item[];
+  setList: Dispatch<SetStateAction<Item[]>>;
+  conversationList: Conversation[];
+  setConversationList: Dispatch<SetStateAction<Conversation[]>>;
+  messageList: Message[];
+  setMessageList: Dispatch<SetStateAction<Message[]>>;
   location: Location;
   setLocation: Dispatch<SetStateAction<Location>>;
 };
 
-type MessageList = Message[];
-type List = Item[];
 
-type ConversationList = Conversation[];
-
-const initalUser = {
+const initialUser = {
+  _id: '',
   name: '',
   email: '',
   password: '',
@@ -47,7 +44,7 @@ const initialLocation = {
 };
 
 const initialContext = {
-  user: initalUser,
+  user: initialUser,
   setUser: () => {},
   list: [],
   setList: () => {},
@@ -62,12 +59,12 @@ const initialContext = {
 const MainContext = createContext<MainContext>(initialContext);
 
 export default function ContextProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<User>(initalUser);
-  const [list, setList] = useState<List>([]);
-  const [conversationList, setConversationList] = useState<ConversationList>(
+  const [user, setUser] = useState<User>(initialUser);
+  const [list, setList] = useState<Item[]>([]);
+  const [conversationList, setConversationList] = useState<Conversation[]>(
     []
   );
-  const [messageList, setMessageList] = useState<MessageList>([]);
+  const [messageList, setMessageList] = useState<Message[]>([]);
   const [location, setLocation] = useState(initialLocation);
   // init of the app:
   // fetch location of user
