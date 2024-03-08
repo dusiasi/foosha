@@ -1,35 +1,9 @@
 import ItemModel from "../models/items";
 import { Request, Response } from "express";
 /////////////////////////////////////////////////////
-export type User = {
-  name: string;
-  email: string;
-  password: string;
-  status: string;
-  image: string;
-  preferences: string[];
-};
+
 //////////////////////////////////////////
-export type Item = {
-  title: String;
-  description: String;
-  owner: String;
-  date: { type: Date };
-  location: {
-    type: {
-      type: String;
-      enum: ["Point"];
-      required: true;
-    };
-    coordinates: {
-      type: [Number]; // [lng, lat]
-      required: true;
-    };
-  };
-  locationName: String;
-  available: { type: Boolean; default: true };
-  image: String;
-};
+
 /////////////////////////////////////////////////////////
 // posting new item to database
 export const postItem = async (req: Request, res: Response) => {
