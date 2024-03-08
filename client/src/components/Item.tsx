@@ -4,22 +4,8 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { FaCommentDots } from 'react-icons/fa6';
 import { formatDate } from '../services/utils';
 import ContactForm from './ContactForm';
+import { Item } from '../types';
 
-///////////////////////////////////////////////////
-export type Item = {
-  title: string;
-  description: string;
-  owner: string;
-  date: Date;
-  location: {
-    type: "Point";
-    coordinates: number[]; // [longitude, latitude]
-  };
-  locationName: string;
-  available: boolean;
-  image?: string; // Optional property
-};
-///////////////////////////////////////////////
 
 type ItemProps ={
   item:Item
@@ -28,12 +14,12 @@ type ItemProps ={
 const Item : FC<ItemProps> = ({item})=> {
 // function Item({item}:ItemProps) {
   const [showContactForm, setShowContactForm] = useState(false);
-  const itemRef = useRef(null);
+  const itemRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
     if (showContactForm) {
       if(itemRef.current) {
-        itemRef.current.scrollIntoView({behaviour: 'smooth', block: 'nearest'})
+        itemRef.current.scrollIntoView({behavior: 'smooth', block: 'nearest'})
       }
     }
   }, [showContactForm])

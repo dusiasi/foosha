@@ -17,7 +17,7 @@ function ItemList () {
        let distanceB = calculateDistance(b.location.coordinates[0], b.location.coordinates[1], location.lat, location.lng);
        return distanceA - distanceB;
      });
-     const filteredOpenItems = sortedItemsLocation.filter(elem => elem.available);
+     const filteredOpenItems = sortedItemsLocation.filter(elem => elem.available); // delete this
      setList(sortedItemsLocation);
    }
   },[] );
