@@ -9,6 +9,7 @@ export type User = {
 };
 
 export type Item = {
+  _id: string;
   title: string;
   description: string;
   owner: string;
