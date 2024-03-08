@@ -36,7 +36,7 @@ export type Message = {
   author: string; // user _id of sender
   thread: string; // conversation _id which this message is about
   read: boolean;
-  dateTime: Date; // Date
+  dateTime: number; // Date
 };
 
 export type Conversation = {
