@@ -32,7 +32,7 @@ export async function getAllConversations ():Promise<Conversation[]> {
 }};
 
 
-export async function getConversationByItemId (id:string, contact:Item) {
+export async function getConversationByItemId (id:string, contact:Conversation):Promise<Conversation[]> {
   try   {
     const response = await fetch(`${rootUrl}/${id}/${contact}`, {
     method: 'GET'
@@ -41,4 +41,5 @@ export async function getConversationByItemId (id:string, contact:Item) {
   return data;
   } catch (error) {
     console.log(error);
+    throw new Error("error getting conversation")
 }};
