@@ -11,14 +11,12 @@ import {
   FaMapLocationDot,
   FaPaperPlane,
 } from 'react-icons/fa6';
+import { User } from '../types';
 
-type User = {
+export type FormValues = {
   name: string;
   email: string;
   password: string;
-  status: string;
-  image: string;
-  preferences: string[];
 };
 
 const initialState = {
@@ -34,22 +32,22 @@ function Root() {
   const navigate = useNavigate();
 
   // Form state
-  const [formValues, setFormValues] = useState(initialState);
+  const [formValues, setFormValues] = useState<FormValues>(initialState);
 
   // changes in the login form
-  function changeHandler(e) {
+  function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   }
 
   // submitting the login form: login and navigate to all items
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    async function logInAndSet(formValues) {
+    async function logInAndSet(formValues: FormValues) {
       const { email, password } = formValues;
 
-      const user = { email, password };
-      const loggedInUser = await login(user);
+      const loginData = { email, password };
+      const loggedInUser = await login(loginData);
       setFormValues(initialState);
       setUser(loggedInUser);
       navigate('/items');
@@ -57,12 +55,12 @@ function Root() {
     logInAndSet(formValues);
   };
 
-  const handleSignup = async (e) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    async function signupAndSet(formValues) {
+    async function signupAndSet(formValues: FormValues) {
       const { name, email, password } = formValues;
-      const user = { name, email, password };
-      const newUser = await createUser(user);
+      const signupData = { name, email, password };
+      const newUser = await createUser(signupData);
       setFormValues(initialState);
       setUser(newUser);
       setShowSignup(false);
@@ -74,7 +72,7 @@ function Root() {
   // logout button redirects back to start
   const handleLogout = async () => {
     function logoutAndRedirect() {
-      setUser(initialState);
+      setUser({} as User);
       navigate('/');
     }
     logoutAndRedirect();
