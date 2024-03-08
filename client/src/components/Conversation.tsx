@@ -21,7 +21,7 @@ type FormValue = {
   dateTime: number;
 };
 
-function Conversation({ item: conversation }: { item: ConversationType }) {
+function Conversation({ item: conversation }: { item: Item }) {
   const [showChat, setShowChat] = useState(false);
   const [messagesByConversation, setMessagesByConversation] = useState<
     MessageType[]
