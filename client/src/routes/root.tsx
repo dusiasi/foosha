@@ -49,6 +49,8 @@ function Root() {
       const loginData = { email, password };
       const loggedInUser = await login(loginData);
       setFormValues(initialState);
+
+      // set user to the logged in user
       setUser(loggedInUser);
       navigate('/items');
     }
@@ -62,6 +64,8 @@ function Root() {
       const signupData = { name, email, password };
       const newUser = await createUser(signupData);
       setFormValues(initialState);
+
+      // set user to the new user
       setUser(newUser);
       setShowSignup(false);
       navigate('/items');
