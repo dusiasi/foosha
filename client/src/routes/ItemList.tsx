@@ -29,7 +29,7 @@ function ItemList () {
     <>
       <h2>List</h2>
       <div id="item-map" >
-        <Map mapAsInput={false} items={list} zoom={10}></Map>
+        <Map mapAsInput={false} zoom={10}></Map>
       </div>
 
       <div id="item-list-container" >

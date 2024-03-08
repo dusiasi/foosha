@@ -16,7 +16,6 @@ export type Item = {
   owner: string;
   date: Date;
   location: {
-    type: 'Point';
     coordinates: number[]; // [longitude, latitude]
   };
   locationName: string;
