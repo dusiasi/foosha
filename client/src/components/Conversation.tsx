@@ -37,7 +37,8 @@ function Conversation({ item: conversation }: { item: ConversationType }) {
     conversationList,
   } = useMainContext();
 
-  const initialState: Message = {
+  const initialState: FormValue ={
+    _id: "",
     message: "",
     author: user._id,
     read: false,

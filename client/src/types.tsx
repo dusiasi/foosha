@@ -31,7 +31,6 @@ export type initialState = {
 }
 
 export type Message = {
-   _id: string;
   message: string;
   author: string; // user _id of sender
   thread: string; // conversation _id which this message is about
