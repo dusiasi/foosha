@@ -1,26 +1,23 @@
-import mongoose from './index';
+import mongoose from "./index";
+import { InferSchemaType } from "mongoose";
+//import User from './users';
 
-type Conversation = {
-  itemName: string;
-  itemId: string;
-  itemImage: string;
-  contact: string;
-  owner: mongoose.Schema.Types.ObjectId;
-  date: Date;
-};
+export type ConversationType = InferSchemaType<typeof Conversation>;
 
+// type Conversation = InferSchemaType<typeof >
 // defining data structure
-const Conversation = new mongoose.Schema<Conversation>({
+const Conversation = new mongoose.Schema({
   itemName: String, // item name which this conversation is about
   itemId: String, // item _id which this conversation is about
   itemImage: String, // item image which this conversation is about
   contact: String, // user _id of the contacting person
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
+    required: true,
   }, // user _id of the item's owner
   date: { type: Date, default: Date.now() }, // date of conversation start
 });
 
-const ConversationModel = mongoose.model<Conversation>('conversations', Conversation);
+const ConversationModel = mongoose.model("conversations", Conversation);
 export default ConversationModel;
