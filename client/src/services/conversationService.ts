@@ -1,9 +1,9 @@
-import { Conversation } from "../types";
+import { Conversation, Item } from "../types";
 
-const rootUrl = `${import.meta.env.VITE_SERVER || 'http://localhost:3000'}/conversations`;
+const rootUrl = `${import.meta.env.VITE_SERVER || 'http://localhost:4000'}/conversations`;
 
 
-export async function postConversation (body) {
+export async function postConversation (body: Conversation) {
   try {
     const response = await fetch(rootUrl, {
     method: 'POST',
@@ -32,7 +32,7 @@ export async function getAllConversations ():Promise<Conversation[]> {
 }};
 
 
-export async function getConversationByItemId (id, contact) {
+export async function getConversationByItemId (id:string, contact:Item) {
   try   {
     const response = await fetch(`${rootUrl}/${id}/${contact}`, {
     method: 'GET'
