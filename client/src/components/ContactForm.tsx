@@ -3,8 +3,9 @@ import './ContactForm.css';
 import { getConversationByItemId, postConversation } from "../services/conversationService";
 import { useMainContext } from "./Context";
 import { postMessage } from "../services/messageService";
-import { Item, Message, Conversation } from "../types";
+import { Item, Message, Conversation as ConversationType} from "../types";
 import { initialState as initialStateType } from "../types";
+import Conversation from "./Conversation";
 
  type propsType = {
   item: Item,
@@ -12,7 +13,7 @@ import { initialState as initialStateType } from "../types";
 }
 
 function ContactForm({item, setShowContactForm}: propsType) {
-
+  const imageUrl = item.image? item.image : "no image";
   const { user, setConversationList, setMessageList } = useMainContext();
 
 
@@ -49,13 +50,17 @@ function ContactForm({item, setShowContactForm}: propsType) {
         setMessageList(prevList => [...prevList, newMessage]);
       } else {
          // create a new conversation first
-        const newConversation: Conversation  = await postConversation({
-        itemName: item.title,
-        itemId: item._id,
-        itemImage: item.image,
-        contact: user, // was user._id
-        owner: item.owner,
-        });
+         const itemData: Omit<ConversationType, "_id"> = {
+          itemId: item._id,
+          itemName: item.title,
+          itemImage: imageUrl,
+          contact: user._id,
+          owner: item.owner,
+          date: item.date,
+         }
+        
+ 
+        const newConversation: ConversationType = await postConversation(itemData);
         // then post the message and add it to the new convo
         const newMessage = await postMessage({...formValues, thread: newConversation._id});
 
