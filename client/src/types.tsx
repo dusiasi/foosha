@@ -14,10 +14,8 @@ export type Item = {
   title: string;
   description: string;
   owner: User;
-  date: Date;
-  location: {
-    coordinates: number[]; // [longitude, latitude]
-  };
+  date: number;
+  location: Location; // [longitude, latitude]
   locationName: string;
   available: boolean;
   image?: string; // Optional property

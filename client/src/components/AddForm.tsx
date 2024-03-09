@@ -4,7 +4,7 @@ import { postImageToCloudinary, postItem } from "../services/itemService";
 import { useMainContext } from "./Context";
 import Map from "./Map";
 import { formatLocation } from "../services/mapApiService";
-import { Item } from "../types";
+import { Item, Location } from "../types";
 
 type propsType = {
   setShowAddForm: Dispatch<SetStateAction<boolean>>
@@ -15,10 +15,10 @@ function AddForm ({setShowAddForm}: propsType) {
 
   const { user, setList } = useMainContext();
 
-  const initialState = {
+  const initialState: Omit<Item, '_id'> = {
     title: '',
     description: '',
-    owner: user._id,
+    owner: user, //was user._id
     location: {
       lat: 0,
       lng: 0,
@@ -30,18 +30,18 @@ function AddForm ({setShowAddForm}: propsType) {
   }
 
   const [formValues, setFormValues] = useState(initialState);
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // changes in the form
   function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, files } = e.target;
-    if (type === 'file') {
+    if (type === 'file' && files) {
       setImageFile(files[0]); // Set the image file
     } else setFormValues({ ...formValues, [name]: value });
   }
 
   // choosing a location by clicking on the map
-  function handleLocationSelect (location) {
+  function handleLocationSelect (location: Location) {
     setFormValues((prev) => ({ ...prev, location }));
   };
 
@@ -52,17 +52,17 @@ async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
   let imageUrl = '';
   if (imageFile) {
     try {
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('upload_preset', 'nwvjjpdw');
-      imageUrl = await postImageToCloudinary(formData);
+      imageUrl = await postImageToCloudinary({
+        file: imageFile,
+        upload_preset: 'nwjjpdw',
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
   const locationName = await formatLocation(formValues.location.lat, formValues.location.lng);
-  const newItemData = {
+  const newItemData: Omit<Item, '_id'> = {
     ...formValues,
     image: imageUrl,
     locationName
