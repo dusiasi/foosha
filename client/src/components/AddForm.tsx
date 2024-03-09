@@ -4,7 +4,7 @@ import { postImageToCloudinary, postItem } from "../services/itemService";
 import { useMainContext } from "./Context";
 import Map from "./Map";
 import { formatLocation } from "../services/mapApiService";
-import { Item } from "../types";
+import { Item, Location } from "../types";
 
 type propsType = {
   setShowAddForm: Dispatch<SetStateAction<boolean>>
@@ -30,18 +30,18 @@ function AddForm ({setShowAddForm}: propsType) {
   }
 
   const [formValues, setFormValues] = useState(initialState);
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // changes in the form
   function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, files } = e.target;
-    if (type === 'file') {
+    if (type === 'file' && files) {
       setImageFile(files[0]); // Set the image file
     } else setFormValues({ ...formValues, [name]: value });
   }
 
   // choosing a location by clicking on the map
-  function handleLocationSelect (location) {
+  function handleLocationSelect (location: Location) {
     setFormValues((prev) => ({ ...prev, location }));
   };
 
