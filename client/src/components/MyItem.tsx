@@ -30,11 +30,14 @@ function MyItem({ item }: Props) {
   const [showEdit, setShowEdit] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const itemRef = useRef(null);
+  const itemRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
     if (showEdit) {
-      itemRef.current.scrollIntoView({ behaviour: 'smooth', block: 'nearest' });
+      itemRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
     }
   }, [showEdit]);
 
