@@ -4,9 +4,8 @@ const rootUrl = `${
   import.meta.env.VITE_SERVER || "http://localhost:4000"
 }/conversations`;
 
-export async function postConversation(
-  body: Conversation
-): Promise<Conversation> {
+
+export async function postConversation(body: Conversation): Promise<Conversation> {
   try {
     const response = await fetch(rootUrl, {
       method: "POST",
@@ -41,6 +40,9 @@ export async function getConversationByItemId(
   contact: User
 ): Promise<Conversation> {
   try {
+
+export async function getConversationByItemId (id:string, contact:Conversation):Promise<Conversation> {
+  try   {
     const response = await fetch(`${rootUrl}/${id}/${contact}`, {
       method: "GET",
     });
