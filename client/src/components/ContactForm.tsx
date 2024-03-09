@@ -15,9 +15,8 @@ function ContactForm({item, setShowContactForm}: propsType) {
 
   const { user, setConversationList, setMessageList } = useMainContext();
 
-  type messageOmitId = Omit<Message, '_id'>;
 
-  const initialState: messageOmitId = {
+  const initialState: Omit<Message, '_id'> = {
     message: '',
     author: user._id,
     thread: '',
