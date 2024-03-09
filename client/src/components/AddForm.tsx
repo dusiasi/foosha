@@ -16,7 +16,7 @@ function AddForm({ setShowAddForm }: propsType) {
   const initialState: Omit<Item, '_id'> = {
     title: '',
     description: '',
-    owner: user._id, //was user._id
+    owner: user._id,
     location: {
       lat: 0,
       lng: 0,
