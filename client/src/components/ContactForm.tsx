@@ -9,7 +9,7 @@ import { postMessage } from '../services/messageService';
 import { Item, Message, Conversation as ConversationType } from '../types';
 import { initialState as initialStateType } from '../types';
 import Conversation from './Conversation';
-import { response } from 'express';
+
 
 type propsType = {
   item: Item;
