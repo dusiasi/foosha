@@ -15,8 +15,8 @@ function ItemList () {
   useEffect(() => {
     if (location) {
       const sortedItemsLocation = list.sort((a, b) => {
-       let distanceA = calculateDistance(a.location.coordinates[0], a.location.coordinates[1], location.lat, location.lng);
-       let distanceB = calculateDistance(b.location.coordinates[0], b.location.coordinates[1], location.lat, location.lng);
+       let distanceA = calculateDistance(a.location.lat, a.location.lng, location.lat, location.lng);
+       let distanceB = calculateDistance(b.location.lat, b.location.lng, location.lat, location.lng);
        return distanceA - distanceB;
      });
      const filteredOpenItems = sortedItemsLocation.filter(elem => elem.available); // delete this
