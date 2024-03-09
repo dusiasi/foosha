@@ -15,7 +15,7 @@ function AddForm ({setShowAddForm}: propsType) {
 
   const { user, setList } = useMainContext();
 
-  const initialState = {
+  const initialState: Omit<Item, '_id'> = {
     title: '',
     description: '',
     owner: user, //was user._id
