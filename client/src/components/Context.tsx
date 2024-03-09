@@ -66,7 +66,7 @@ export default function ContextProvider({ children }: PropsWithChildren) {
     []
   );
   const [messageList, setMessageList] = useState<Message[]>([]);
-  const [location, setLocation] = useState(initialLocation);
+  const [location, setLocation] = useState<Location>(initialLocation);
  
   // init of the app:
   // fetch location of user:
