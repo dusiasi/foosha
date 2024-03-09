@@ -52,7 +52,7 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
       )}
       {/* if we use the map to render items */}
       {!mapAsInput && list && list.map(elem => (
-        <Marker key={elem._id} position={{ lat: elem.location.coordinates[1], lng: elem.location.coordinates[0] }} />
+        <Marker key={elem._id} position={{ lat: elem.location.lng, lng: elem.location.lat }} />
       ))}
     </GoogleMap>
   ) : <></>;
