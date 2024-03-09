@@ -107,13 +107,13 @@ function Conversation({ item: conversation }: { item: ConversationType }) {
             <h3>{conversation.itemName}</h3>
             {messagesByConversation.map((elem, i) =>
               i === messagesByConversation.length - 1 ? (
-                <div id="last-message-info" key={elem._id}>
+                <div id="last-message-info" key={i}>
                   <p>
                     {" "}
                     {messagesByConversation.length} message
                     {messagesByConversation.length > 1 ? "s" : ""}{" "}
                   </p>
-                  <p>last message: {formatDateTime(elem.dateTime)}</p>
+                  <p>last message: {formatDateTime(new Date(elem.dateTime))}</p>
                   {elem.author != user._id ? (
                     <p id="your-turn-badge">{"your turn!"}</p>
                   ) : (
@@ -159,7 +159,7 @@ function Conversation({ item: conversation }: { item: ConversationType }) {
             >
               <div id="chat-bubbles">
                 {messagesByConversation.map((elem) => (
-                  <Message key={elem._id} item={elem}></Message>
+                  <Message key={elem.author} item={elem}></Message>
                 ))}
               </div>
               <form id="chat-form" onSubmit={submitHandler}>
