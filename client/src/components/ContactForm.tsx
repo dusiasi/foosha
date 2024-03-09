@@ -3,7 +3,7 @@ import './ContactForm.css';
 import { getConversationByItemId, postConversation } from "../services/conversationService";
 import { useMainContext } from "./Context";
 import { postMessage } from "../services/messageService";
-import { Item, Message } from "../types";
+import { Item, Message, Conversation } from "../types";
 import { initialState as initialStateType } from "../types";
 
  type propsType = {
@@ -39,7 +39,7 @@ function ContactForm({item, setShowContactForm}: propsType) {
     async function createConversationAndMessage (formValues: Message) {
 
       // Is there already a conversation for this item?
-      const conversationInDb = await getConversationByItemId(item._id, user._id);
+      const conversationInDb = await getConversationByItemId(item._id, user); // was user._id
 
       // if so:
       if (conversationInDb) {
@@ -48,11 +48,11 @@ function ContactForm({item, setShowContactForm}: propsType) {
         setMessageList(prevList => [...prevList, newMessage]);
       } else {
          // create a new conversation first
-        const newConversation = await postConversation({
+        const newConversation: Conversation  = await postConversation({
         itemName: item.title,
         itemId: item._id,
         itemImage: item.image,
-        contact: user._id,
+        contact: user, // was user._id
         owner: item.owner,
         });
         // then post the message and add it to the new convo
