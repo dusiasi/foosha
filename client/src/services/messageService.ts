@@ -15,7 +15,7 @@ export async function getAllMessages(): Promise<Message[]> {
   }
 };
 
-export async function postMessage (body: Message):Promise<Message[]> {
+export async function postMessage (body: Message):Promise<Message> {
   try {
     const response = await fetch(rootUrl, {
     method: 'POST',

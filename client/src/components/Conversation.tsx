@@ -15,9 +15,11 @@ import {
 } from "../types";
 
 type FormValue = {
+  _id: string;
   message: string;
   author: string;
   thread: string;
+  read: boolean;
   dateTime: number;
 };
 
@@ -35,9 +37,11 @@ function Conversation({ item: conversation }: { item: ConversationType }) {
     conversationList,
   } = useMainContext();
 
-  const initialState = {
+  const initialState: FormValue ={
+    _id: "",
     message: "",
     author: user._id,
+    read: false,
     thread: conversation._id,
     dateTime: Date.now(),
   };
