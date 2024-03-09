@@ -47,7 +47,7 @@ export type Conversation = {
   date: Date; // date of conversation start
 };
 
-export type Location = {
+export type Location = { 
   lat: number;
   lng: number;
 };

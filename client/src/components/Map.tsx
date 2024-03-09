@@ -23,7 +23,7 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
     googleMapsApiKey: mapsApiKey
   });
 
-  const [marker, setMarker] = useState<Location>({lat:0, lng:0});
+  const [marker, setMarker] = useState<Location>({lat: 123.111, lng:111.111});
   const [mapCenter, setMapCenter] = useState<Location>(defaultCenter);
 
 
@@ -33,8 +33,8 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
   // choose a location by clicking on the map
   const onMapClick = mapAsInput ? (e: google.maps.MapMouseEvent) => {
     if(!e.latLng || !e.latLng ) return 
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
+    const lat:number = e.latLng.lat();
+    const lng:number = e.latLng.lng();
     setMarker({ lat, lng });
     onLocationSelect && onLocationSelect({ lat, lng });
   } : null;
@@ -52,7 +52,7 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
       )}
       {/* if we use the map to render items */}
       {!mapAsInput && list && list.map(elem => (
-        <Marker key={elem._id} position={{ lat: elem.location.lng, lng: elem.location.lat }} />
+        <Marker key={elem._id} position={{ lat: elem.location.lng || 0, lng: elem.location.lat || 0}} /> // Added the || number
       ))}
     </GoogleMap>
   ) : <></>;
