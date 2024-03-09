@@ -42,8 +42,8 @@ export type Conversation = {
   itemName: string; // item name which this conversation is about
   itemId: string; // item _id which this conversation is about
   itemImage: string; // item image which this conversation is about
-  contact: User; // user _id of the contacting person
-  owner: User;
+  contact: string // user _id of the contacting person
+  owner: string;
   date: Date; // date of conversation start
 };
 
