@@ -1,12 +1,16 @@
 const mapsApiKey = import.meta.env.VITE_MAPS_API_KEY;
+import { Dispatch, SetStateAction } from "react";
+import { Location as LocationType } from "../types";
 
 // Berlin as a fallback
-export const defaultLocation = {
+export const defaultLocation: LocationType = {
   lat: 52.507389,
-  lng: 13.378096
-}
+  lng: 13.378096,
+};
 
-export function fetchUserLocation(setLocation) {
+export function fetchUserLocation(
+  setLocation: Dispatch<SetStateAction<LocationType>>
+) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -25,7 +29,7 @@ export function fetchUserLocation(setLocation) {
   }
 }
 
-export async function formatLocation (lat, lng) {
+export async function formatLocation(lat: number, lng: number) {
   const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${mapsApiKey}`;
   try {
     const response = await fetch(apiUrl);
@@ -33,10 +37,10 @@ export async function formatLocation (lat, lng) {
     if (data.results.length > 0) return data.results[0].formatted_address;
     else {
       console.error("No results found");
-      return 'No location found';
+      return "No location found";
     }
   } catch (error) {
     console.error("Geocode error:", error);
-    return 'No location found';
+    return "No location found";
   }
 }
