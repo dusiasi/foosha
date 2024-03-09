@@ -49,6 +49,9 @@ export async function getAllItems(): Promise<Item[]> {
       method: 'GET',
     });
     const data = await response.json();
+    console.log('here');
+
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
@@ -63,6 +66,7 @@ export async function getItemById(id: string): Promise<Item> {
       method: 'GET',
     });
     const data = await response.json();
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);

@@ -15,10 +15,12 @@ function MyList() {
 
   useEffect(() => {
     async function filterAndSet() {
-      const filteredList = list.filter(
-        (elem) => elem.owner._id === user._id && elem.available
-      );
+      const filteredList = list.filter((elem: Item) => {
+        return elem.owner === user._id && elem.available;
+      });
       setMyList(filteredList);
+
+      console.log(filteredList);
     }
     filterAndSet();
   }, [list]);
@@ -27,13 +29,13 @@ function MyList() {
     async function filterAndSet() {
       if (!showSavedItems) {
         const filteredList = list.filter(
-          (elem) => elem.available === false && elem.owner._id === user._id
+          (elem) => elem.available === false && elem.owner === user._id
         );
         setMyList(filteredList);
         setShowSavedItems(true);
       } else {
         const filteredList = list.filter(
-          (elem) => elem.available === true && elem.owner._id === user._id
+          (elem) => elem.available === true && elem.owner === user._id
         );
         setMyList(filteredList);
         setShowSavedItems(false);

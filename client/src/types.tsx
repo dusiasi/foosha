@@ -13,8 +13,8 @@ export type Item = {
   _id: string;
   title: string;
   description: string;
-  owner: User;
-  date: number;
+  owner: string;
+  date: Date;
   location: Location; // [longitude, latitude]
   locationName: string;
   available: boolean;
