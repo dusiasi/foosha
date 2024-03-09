@@ -22,7 +22,7 @@ export const postMessage = async (req: Request, res: Response) => {
 // getting all messages from database
 export const allMessages = async (req: Request, res: Response) => {
   try {
-    const messages = await MessageModel.find();
+    const messages = await MessageModel.find().populate('author').exec();
     res.status(200);
     res.send(messages);
   } catch (error) {

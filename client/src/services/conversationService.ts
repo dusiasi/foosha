@@ -44,6 +44,8 @@ export async function getConversationByItemId(
     const response = await fetch(`${rootUrl}/${id}/${contact}`, {
       method: 'GET',
     });
+    console.log(response);
+
     if (response.ok) {
       const data = await response.json();
       console.log(data);

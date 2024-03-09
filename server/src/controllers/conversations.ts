@@ -22,7 +22,9 @@ export const postConversation = async (req: Request, res: Response) => {
 // getting all conversations from database
 export const allConversations = async (req: Request, res: Response) => {
   try {
-    const conversations = await ConversationModel.find().populate('owner');
+    const conversations = await ConversationModel.find()
+      .populate('owner')
+      .exec();
     res.status(200);
     res.send(conversations);
     // return res.body;
@@ -49,9 +51,13 @@ export const getConversationByItemId = async (req: Request, res: Response) => {
     })
       .populate('owner')
       .exec();
-    res.status(200);
-    console.log(conversation);
-    res.json(conversation);
+    if (conversation) {
+      res.status(200);
+      console.log(conversation);
+      res.json(conversation);
+    } else {
+      res.status(400);
+    }
   } catch (error) {
     res.status(500);
     res.send({
