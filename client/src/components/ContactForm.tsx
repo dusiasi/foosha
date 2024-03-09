@@ -54,8 +54,8 @@ function ContactForm({item, setShowContactForm}: propsType) {
           itemId: item._id,
           itemName: item.title,
           itemImage: imageUrl,
-          contact: user._id,
-          owner: item.owner,
+          contact: user,
+          owner: user,
           date: item.date,
          }
         
