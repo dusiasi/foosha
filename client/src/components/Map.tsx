@@ -23,18 +23,27 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
     googleMapsApiKey: mapsApiKey
   });
 
-  const [marker, setMarker] = useState<Location>({lat: 123.111, lng:111.111});
+  const [marker, setMarker] = useState<Location>({lat: 123.111, lng:13.378096});
   const [mapCenter, setMapCenter] = useState<Location>(defaultCenter);
 
 
   // set the map center to the current location
   useEffect(() => setMapCenter(location),[location]);
 
+  /*
+
+lat
+: 
+52.507389
+lng
+: 
+13.378096
+*/
   // choose a location by clicking on the map
   const onMapClick = mapAsInput ? (e: google.maps.MapMouseEvent) => {
     if(!e.latLng || !e.latLng ) return 
-    const lat:number = e.latLng.lat();
-    const lng:number = e.latLng.lng();
+    const lat:number = e.latLng.lat() || 52.507389;
+    const lng:number = e.latLng.lng() || 13.378096;
     setMarker({ lat, lng });
     onLocationSelect && onLocationSelect({ lat, lng });
   } : null;
@@ -52,11 +61,19 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
       )}
       {/* if we use the map to render items */}
       {!mapAsInput && list && list.map(elem => (
-        <Marker key={elem._id} position={{ lat: elem.location.lng || 0, lng: elem.location.lat || 0}} /> // Added the || number
+        <Marker key={elem._id} position={{ lat: elem.location.lng || 52.507389, lng: elem.location.lat || 13.378096}} /> // Added the || number
       ))}
     </GoogleMap>
   ) : <></>;
+/*
 
+lat
+: 
+52.507389
+lng
+: 
+13.378096
+*/
 }
 
 export default Map;

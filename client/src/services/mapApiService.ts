@@ -28,9 +28,15 @@ export function fetchUserLocation(
     setLocation(defaultLocation);
   }
 }
-
-export async function formatLocation(lat: number, lng: number) {
-  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${mapsApiKey}`;
+const myMapsApiKey = "AIzaSyBJy83b3lUe0y-rtCtkPZfd7FQxwUEKNu0";
+export async function formatLocation(
+  lat: number = 52.507389,
+  lng: number = 13.378096
+) {
+  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+    lat || 52.507389
+  },${lng || 13.378096}&key=${myMapsApiKey}`; ///*mapsApiKey*/
+  console.log(apiUrl);
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();

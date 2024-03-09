@@ -19,8 +19,6 @@ function MyList() {
         return elem.owner === user._id && elem.available;
       });
       setMyList(filteredList);
-
-      console.log(filteredList);
     }
     filterAndSet();
   }, [list]);
