@@ -12,19 +12,24 @@ import { deleteItem } from '../services/itemService';
 import { editItem } from '../services/itemService';
 import { useMainContext } from './Context';
 import { postImageToCloudinary } from '../services/itemService';
+import { Item } from '../types';
 
-export type formValues = {
+export type FormValues = {
   title: string;
   description: string;
-  // location: item.location,
-  // locationName: item.locationName || '',
   image: string;
+  available: boolean;
 };
 
-function MyItem({ item }) {
+type Props = {
+  item: Item;
+};
+
+function MyItem({ item }: Props) {
   const { setList } = useMainContext();
   const [showEdit, setShowEdit] = useState(false);
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const itemRef = useRef(null);
 
   useEffect(() => {
@@ -36,18 +41,18 @@ function MyItem({ item }) {
   const initialState = {
     title: '',
     description: '',
-    // location: item.location,
-    // locationName: item.locationName || '',
     image: '',
+    available: true,
   };
 
   const [formValues, setFormValues] = useState(initialState);
 
   // Handle changes for all inputs
-  function changeHandler(e) {
+  function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
-      setImageFile(files[0]);
+      // we add conditional so that it only sets the imagefile if there is a file so that there is not null
+      files && setImageFile(files[0]);
     } else {
       setFormValues((prevValues) => ({
         ...prevValues,
@@ -56,36 +61,29 @@ function MyItem({ item }) {
     }
   }
 
-  // // choosing a location by clicking on the map
-  // function handleLocationSelect (location) {
-  //   setFormValues((prev) => ({ ...prev, location }));
-  // };
-
   // edit form submit
-  async function submitHandler(e) {
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let imageUrl = '';
     if (imageFile) {
       try {
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        formData.append('upload_preset', 'nwvjjpdw');
-        imageUrl = await postImageToCloudinary(formData);
+        imageUrl = await postImageToCloudinary({
+          file: imageFile,
+          upload_preset: 'nwvjjpdw',
+        });
       } catch (error) {
         console.error(error);
       }
     }
 
-    // const locationName = await formatLocation(formValues.location.lat, formValues.location.lng);
     const newItemData = {
       ...formValues,
       image: imageUrl,
-      // locationName
     };
 
     try {
       const updatedItem = await editItem(item._id, newItemData);
-      setFormValues(updatedItem);
+      setFormValues(newItemData);
       setList((list) =>
         list.map((elem) => {
           if (elem._id === item._id) return updatedItem;
@@ -173,7 +171,7 @@ function MyItem({ item }) {
               type="text"
               value={formValues.title}
               onChange={changeHandler}
-              placeholder="user name"
+              placeholder="title"
               required={true}
             ></input>
             <label>description</label>
@@ -185,8 +183,6 @@ function MyItem({ item }) {
               placeholder="description"
               required={true}
             ></input>
-            {/* <label>location</label>
-       <Map mapAsInput={true} onLocationSelect={handleLocationSelect} zoom={13}></Map> */}
             <label>image</label>
             <input
               id="upload-button-item-image"

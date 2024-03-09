@@ -1,5 +1,4 @@
 import { Item } from '../types';
-import { FormValues } from '../components/MyItem';
 const rootUrl = `${
   import.meta.env.VITE_SERVER || 'http://localhost:4000'
 }/items`;
@@ -74,8 +73,8 @@ export async function getItemById(id: string): Promise<Item> {
 // edit an item in db
 export async function editItem(
   id: string,
-  body: FormValues
-): Promise<FormValues> {
+  body: Pick<Item, 'title' | 'description' | 'image' | 'available'>
+): Promise<Item> {
   try {
     const response = await fetch(`${rootUrl}/${id}`, {
       method: 'PUT',
