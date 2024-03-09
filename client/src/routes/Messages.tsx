@@ -14,7 +14,7 @@ function Messages () {
           (!conversationList.length) ?
             <p>Slide into their DMs! 💚</p>
             :
-            conversationList.map(elem => elem.owner._id === user._id || elem.contact._id === user._id ?
+            conversationList.map(elem => elem.owner === user || elem.contact === user ?
               <Conversation key={elem._id} item={elem} ></Conversation>
               :
               null
