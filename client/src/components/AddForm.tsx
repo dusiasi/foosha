@@ -18,7 +18,7 @@ function AddForm ({setShowAddForm}: propsType) {
   const initialState = {
     title: '',
     description: '',
-    owner: user._id,
+    owner: user, //was user._id
     location: {
       lat: 0,
       lng: 0,
@@ -52,17 +52,17 @@ async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
   let imageUrl = '';
   if (imageFile) {
     try {
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      formData.append('upload_preset', 'nwvjjpdw');
-      imageUrl = await postImageToCloudinary(formData);
+      imageUrl = await postImageToCloudinary({
+        file: imageFile,
+        upload_preset: 'nwjjpdw',
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
   const locationName = await formatLocation(formValues.location.lat, formValues.location.lng);
-  const newItemData = {
+  const newItemData: Omit<Item, '_id'> = {
     ...formValues,
     image: imageUrl,
     locationName
