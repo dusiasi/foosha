@@ -4,6 +4,7 @@ import config from '../config';
 // connecting to database
 async function main() {
   try {
+    console.log('trying to connect');
     await mongoose.connect(`${config.dbUrl}/${config.dbName}`);
     console.log('Database successfully connected to server 🚀');
   } catch (error) {

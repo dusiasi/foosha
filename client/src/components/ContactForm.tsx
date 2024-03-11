@@ -42,18 +42,16 @@ function ContactForm({ item, setShowContactForm }: propsType) {
     try {
       async function createConversationAndMessage({ _id, author }: Message) {
         // Is there already a conversation for this item?
-        console.log(formValues);
-        console.log(item._id);
-        console.log(user._id);
         const conversationInDb = await getConversationByItemId(
           item._id,
           author
         ); // was user._id
 
+        console.log({ itemId: item._id, author });
         // if so:
-        console.log(conversationInDb);
-        console.log('CONVERSATION EXISTS');
+
         if (conversationInDb) {
+          console.log('conversation exists');
           const newMessage = await postMessage({
             ...formValues,
             thread: conversationInDb._id,
@@ -61,8 +59,6 @@ function ContactForm({ item, setShowContactForm }: propsType) {
           // update message list
           setMessageList((prevList) => [...prevList, newMessage]);
         } else {
-          console.log('NO CONVERSATION EXISTS');
-
           // create a new conversation first
           const itemData: Omit<ConversationType, '_id'> = {
             itemId: item._id,
@@ -76,6 +72,7 @@ function ContactForm({ item, setShowContactForm }: propsType) {
           const newConversation: ConversationType = await postConversation(
             itemData
           );
+          console.log({ newConversation });
           // then post the message and add it to the new convo
           const newMessage = await postMessage({
             ...formValues,

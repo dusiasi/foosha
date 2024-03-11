@@ -45,10 +45,12 @@ export async function postImageToCloudinary(body: {
 // get all items from database
 export async function getAllItems(): Promise<Item[]> {
   try {
+    console.log({ rootUrl });
     const response = await fetch(rootUrl, {
       method: 'GET',
     });
     const data = await response.json();
+    console.log({ data });
     return data;
   } catch (error) {
     console.log(error);

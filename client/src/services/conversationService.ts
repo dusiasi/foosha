@@ -15,10 +15,10 @@ export async function postConversation(
     });
 
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw new Error('error posting conversation');
   }
 }
@@ -30,7 +30,7 @@ export async function getAllConversations(): Promise<Conversation[]> {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw new Error('error getting conversation');
   }
 }
@@ -39,21 +39,18 @@ export async function getConversationByItemId(
   contact: string
 ): Promise<Conversation> {
   try {
-    console.log('here');
-    console.log(id, contact);
     const response = await fetch(`${rootUrl}/${id}/${contact}`);
-    console.log(response);
-
+    const data = await response.json();
+    return data;
     if (response.ok) {
-      const data = await response.json();
+      // const data = await response.json();
       console.log(data);
       return data;
     } else {
-      console.log('the error');
-      throw new Error('new error');
+      throw new Error(response.statusText);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error('error getting conversation');
   }
 }

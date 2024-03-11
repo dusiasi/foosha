@@ -14,7 +14,6 @@ import { fetchUserLocation } from '../services/mapApiService';
 import { sortByDate } from '../services/utils';
 import { User, Item, Message, Conversation, Location } from '../types';
 
-
 type MainContext = {
   user: User;
   setUser: Dispatch<SetStateAction<User>>;
@@ -27,7 +26,6 @@ type MainContext = {
   location: Location;
   setLocation: Dispatch<SetStateAction<Location>>;
 };
-
 
 const initialUser = {
   _id: '',
@@ -62,12 +60,10 @@ const MainContext = createContext<MainContext>(initialContext);
 export default function ContextProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User>(initialUser);
   const [list, setList] = useState<Item[]>([]);
-  const [conversationList, setConversationList] = useState<Conversation[]>(
-    []
-  );
+  const [conversationList, setConversationList] = useState<Conversation[]>([]);
   const [messageList, setMessageList] = useState<Message[]>([]);
   const [location, setLocation] = useState<Location>(initialLocation);
- 
+
   // init of the app:
   // fetch location of user:
   // fetch data lists:
@@ -87,6 +83,7 @@ export default function ContextProvider({ children }: PropsWithChildren) {
     }
     fetchAndSet();
   }, []);
+
   return (
     <MainContext.Provider
       value={{

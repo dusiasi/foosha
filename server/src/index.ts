@@ -12,5 +12,5 @@ app.use(express.json());
 app.use(router);
 
 app.listen(config.port, () =>
-  console.log(`Server listening on port ${config.port}`)
+  console.log(`Servers listening on port ${config.port}`)
 );

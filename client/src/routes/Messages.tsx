@@ -7,12 +7,14 @@ function Messages() {
 
   console.log(conversationList); //logs it
   conversationList.map((elem) => {
-    console.log(elem);
-    console.log(elem.owner), console.log(elem.contact);
+    console.log(elem.owner._id), console.log(elem.contact);
+    console.log(user._id);
+    if (elem.owner === user._id || elem.contact === user._id)
+      console.log('hey');
+    else console.log('something wrong');
   });
 
   console.log(user);
-  console.log(user._id);
   return (
     <>
       <h2>Messages</h2>
@@ -21,7 +23,7 @@ function Messages() {
           <p>Slide into their DMs! 💚</p>
         ) : (
           conversationList.map((elem) =>
-            elem.owner === user._id || elem.contact === user._id ? (
+            elem.owner._id === user._id || elem.contact._id === user._id ? (
               <Conversation key={elem._id} item={elem}></Conversation>
             ) : null
           )

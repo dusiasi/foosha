@@ -1,4 +1,5 @@
 import mongoose from './index';
+
 import { User } from './users';
 
 type Message = {
@@ -13,7 +14,7 @@ const Message = new mongoose.Schema<Message>({
   message: String,
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'users',
     required: true,
   },
   thread: String, // conversation _id which this message is about

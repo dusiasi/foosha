@@ -21,7 +21,7 @@ const Item = new mongoose.Schema<Item>({
   description: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'users',
     required: true,
   },
   date: { type: Date, default: Date.now() },
@@ -43,4 +43,5 @@ const Item = new mongoose.Schema<Item>({
 
 Item.index({ location: '2dsphere' });
 const ItemModel = mongoose.model('items', Item);
+
 export default ItemModel;
