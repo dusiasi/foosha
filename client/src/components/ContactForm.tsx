@@ -10,7 +10,6 @@ import { Item, Message, Conversation as ConversationType } from '../types';
 import { initialState as initialStateType } from '../types';
 import Conversation from './Conversation';
 
-
 type propsType = {
   item: Item;
   setShowContactForm: Dispatch<SetStateAction<boolean>>;
@@ -41,11 +40,14 @@ function ContactForm({ item, setShowContactForm }: propsType) {
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      async function createConversationAndMessage(formValues: Message) {
+      async function createConversationAndMessage({ _id, author }: Message) {
         // Is there already a conversation for this item?
+        console.log(formValues);
+        console.log(item._id);
+        console.log(user._id);
         const conversationInDb = await getConversationByItemId(
           item._id,
-          user._id
+          author
         ); // was user._id
 
         // if so:

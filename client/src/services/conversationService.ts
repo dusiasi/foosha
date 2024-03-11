@@ -41,9 +41,7 @@ export async function getConversationByItemId(
   try {
     console.log('here');
     console.log(id, contact);
-    const response = await fetch(`${rootUrl}/${id}/${contact}`, {
-      method: 'GET',
-    });
+    const response = await fetch(`${rootUrl}/${id}/${contact}`);
     console.log(response);
 
     if (response.ok) {
@@ -51,6 +49,7 @@ export async function getConversationByItemId(
       console.log(data);
       return data;
     } else {
+      console.log('the error');
       throw new Error('new error');
     }
   } catch (error) {

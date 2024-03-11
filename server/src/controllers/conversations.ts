@@ -22,6 +22,7 @@ export const postConversation = async (req: Request, res: Response) => {
 // getting all conversations from database
 export const allConversations = async (req: Request, res: Response) => {
   try {
+    console.log('is this running??');
     const conversations = await ConversationModel.find()
       .populate('owner')
       .exec();
@@ -51,6 +52,7 @@ export const getConversationByItemId = async (req: Request, res: Response) => {
     })
       .populate('owner')
       .exec();
+
     if (conversation) {
       res.status(200);
       console.log(conversation);
