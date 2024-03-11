@@ -1,15 +1,29 @@
 import ConversationModel from '../models/conversations';
 import { Request, Response } from 'express';
+import ItemModel from '../models/items';
 
 // posting new conversation to database
 export const postConversation = async (req: Request, res: Response) => {
   try {
+    // id
+    const { id } = req.params;
     const conversation = req.body;
-    const newConversation = new ConversationModel(conversation);
-    console.log({ newConversation });
-    newConversation.save();
-    res.status(201);
-    res.send(newConversation);
+    // check if selected item has a conversation
+    const item = await ItemModel.findOne({
+      _id: id,
+    })
+      .populate('conversations')
+      .exec();
+    console.log(item);
+    if (item?.conversations.length) {
+      res.status(201).json(conversation);
+    } else {
+      const newConversation = new ConversationModel(conversation);
+      newConversation.save();
+      res.status(201);
+      // console.log(newConversation);
+      res.send(newConversation);
+    }
   } catch (error) {
     console.error(error);
     res.status(500);

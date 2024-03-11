@@ -1,6 +1,6 @@
-import mongoose from "./index";
+import mongoose from './index';
 
-import { InferSchemaType, Document } from "mongoose";
+import { InferSchemaType, Document } from 'mongoose';
 //import User from './users';
 
 export type ConversationType = InferSchemaType<typeof Conversation>;
@@ -10,21 +10,21 @@ type ConversationDocument = Document<unknown, {}, ConversationType> &
 const Conversation = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
   },
   item: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "items",
+    ref: 'items',
   },
   messages: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "messages",
-      required: true,
+      ref: 'messages',
+      // required: true,
     },
   ],
   date: { type: Date, default: Date.now() },
@@ -32,11 +32,11 @@ const Conversation = new mongoose.Schema({
 
 async function updateItem(doc: ConversationDocument) {
   await mongoose
-    .model("items")
+    .model('items')
     .updateOne({ _id: doc.item?._id }, { $push: { conversations: doc } });
 }
 
-Conversation.post("save", updateItem);
+Conversation.post('save', updateItem);
 
-const ConversationModel = mongoose.model("conversations", Conversation);
+const ConversationModel = mongoose.model('conversations', Conversation);
 export default ConversationModel;
