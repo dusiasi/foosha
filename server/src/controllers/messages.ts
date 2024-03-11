@@ -6,27 +6,42 @@ import ConversationModel from '../models/conversations';
 // posting new message to database
 export const postMessage = async (req: Request, res: Response) => {
   try {
-    // id
+    const { author, message, owner } = req.body;
     const { id } = req.params;
-    const conversation = req.body;
+
     // check if selected item has a conversation
     const item = await ItemModel.findOne({
       _id: id,
     })
       .populate('conversations')
       .exec();
-    console.log(item);
+
     if (item?.conversations.length) {
-      res.status(201).json(conversation);
-      //add message body to conversation
+      // res.status(201).json(message)
+      const newMessage = new MessageModel({
+        author: author,
+        message: message,
+        conversation: id,
+      });
+      await newMessage.save();
+      res.status(201).send(newMessage);
     } else {
-      const newConversation = new ConversationModel(conversation);
-      newConversation.save();
+      const newConversation = new ConversationModel({
+        sender: author,
+        owner: owner,
+        item: id,
+        date: Date.now(),
+      });
+      await newConversation.save();
+
+      const newMessage = new MessageModel({
+        author: author,
+        message: message,
+        conversation: id,
+      });
+      await newMessage.save();
       res.status(201);
-
-      //add message body to conversation
-
-      res.send(newConversation);
+      res.send(newMessage);
     }
   } catch (error) {
     console.error(error);
@@ -34,21 +49,6 @@ export const postMessage = async (req: Request, res: Response) => {
     res.send({
       message:
         'An unexpected error occurred while creating the conversation. Please try again later.',
-    });
-  }
-
-  try {
-    const message = req.body;
-    const newMessage = new MessageModel(message);
-    newMessage.save();
-    res.status(201);
-    res.send(newMessage);
-  } catch (error) {
-    console.error();
-    res.status(500);
-    res.send({
-      message:
-        'An unexpected error occurred while posting the message. Please try again later.',
     });
   }
 };
