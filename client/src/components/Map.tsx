@@ -3,7 +3,8 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useMainContext } from './Context';
 import { defaultLocation } from '../services/mapApiService';
 import { Location } from '../types';
-const mapsApiKey = import.meta.env.VITE_MAPS_API_KEY;
+// const mapsApiKey = import.meta.env.VITE_MAPS_API_KEY;
+const myMapsApiKey = "AIzaSyBJy83b3lUe0y-rtCtkPZfd7FQxwUEKNu0";
 
 const containerStyle = {
   width: '100%',
@@ -20,7 +21,7 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
   const { location, list } = useMainContext();
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: mapsApiKey
+    googleMapsApiKey: myMapsApiKey // 
   });
 
   const [marker, setMarker] = useState<Location>({lat: 123.111, lng:13.378096});
