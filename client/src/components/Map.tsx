@@ -24,7 +24,7 @@ function Map({mapAsInput, onLocationSelect, zoom}: propsType) {
     googleMapsApiKey: myMapsApiKey // 
   });
 
-  const [marker, setMarker] = useState<Location>({lat: 123.111, lng:13.378096});
+  const [marker, setMarker] = useState<Location>({lat:0, lng:0});
   const [mapCenter, setMapCenter] = useState<Location>(defaultCenter);
 
 
@@ -42,9 +42,12 @@ lng
 */
   // choose a location by clicking on the map
   const onMapClick = mapAsInput ? (e: google.maps.MapMouseEvent) => {
-    if(!e.latLng || !e.latLng ) return 
-    const lat:number = e.latLng.lat() || 52.507389;
-    const lng:number = e.latLng.lng() || 13.378096;
+    console.log("here")
+    if(!e.latLng ) return 
+    const lat:number = e.latLng.lat(); //  || 52.507389;
+    console.log("lat om click", e.latLng.lat())
+    const lng:number = e.latLng.lng(); //  || 13.378096
+    console.log("lng:", e.latLng.lng())
     setMarker({ lat, lng });
     onLocationSelect && onLocationSelect({ lat, lng });
   } : null;
@@ -54,7 +57,11 @@ lng
       mapContainerStyle={containerStyle}
       center={mapCenter}
       zoom={zoom}
-      onClick={e => onMapClick}
+      onClick={(e) => {
+        if (mapAsInput && onMapClick !== null) {
+          onMapClick(e);
+        }
+      }}
     >
       {/* if we use the map as an input form */}
       {mapAsInput && marker && (
