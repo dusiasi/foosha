@@ -1,33 +1,42 @@
-import mongoose from './index';
+import mongoose from "./index";
 
-import { InferSchemaType } from 'mongoose';
+import { InferSchemaType, Document } from "mongoose";
 //import User from './users';
 
 export type ConversationType = InferSchemaType<typeof Conversation>;
+type ConversationDocument = Document<unknown, {}, ConversationType> &
+  ConversationType;
 
-// type Conversation = InferSchemaType<typeof >
-// defining data structure
 const Conversation = new mongoose.Schema({
-  itemName: String, // item name which this conversation is about
-  itemId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'items',
-    required: true,
-  }, // item _id which this conversation is about
-  itemImage: String, // item image which this conversation is about
-  contact: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'users', //this is not true, should be the user_id of the contacting person
-    required: true,
-  }, // user _id of the contacting person
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
-    required: true,
-  }, // user _id of the item's owner
-  date: { type: Date, default: Date.now() }, // date of conversation start
+    ref: "users",
+  },
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+  },
+  item: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "items",
+  },
+  messages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "messages",
+      required: true,
+    },
+  ],
+  date: { type: Date, default: Date.now() },
 });
 
-const ConversationModel = mongoose.model('conversations', Conversation);
+async function updateItem(doc: ConversationDocument) {
+  await mongoose
+    .model("items")
+    .updateOne({ _id: doc.item?._id }, { $push: { conversations: doc } });
+}
+
+Conversation.post("save", updateItem);
+
+const ConversationModel = mongoose.model("conversations", Conversation);
 export default ConversationModel;
-///

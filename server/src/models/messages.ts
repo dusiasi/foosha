@@ -1,26 +1,33 @@
-import mongoose from './index';
+import { InferSchemaType, Document } from "mongoose";
+import mongoose from "./index";
 
-import { User } from './users';
-
-type Message = {
-  message: string;
-  author: User; // user _id of sender
-  thread: string; // conversation _id which this message is about
-  read: boolean;
-  dateTime: Date;
-};
+export type MessageType = InferSchemaType<typeof Message>;
+type MessageDocument = Document<unknown, {}, MessageType> & MessageType;
 // defining data structure
-const Message = new mongoose.Schema<Message>({
+const Message = new mongoose.Schema({
   message: String,
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
+    ref: "users",
     required: true,
   },
-  thread: String, // conversation _id which this message is about
+  conversation: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "conversations",
+    required: true,
+  },
   read: { type: Boolean, default: false },
   dateTime: { type: Date, default: Date.now() },
 });
 
-const MessageModel = mongoose.model('messages', Message);
+async function updateDate(doc: MessageDocument) {
+  
+  await mongoose
+    .model("conversations")
+    .updateOne({ _id: doc.conversation }, { dateTime: Date.now() });
+}
+
+Message.post("save", updateDate);
+
+const MessageModel = mongoose.model("messages", Message);
 export default MessageModel;

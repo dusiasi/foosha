@@ -36,7 +36,14 @@ export const postItem = async (req: Request, res: Response) => {
 // getting all items from database
 export const allItems = async (req: Request, res: Response) => {
   try {
-    const items = await ItemModel.find().populate('owner').exec();
+    const items = await ItemModel.find().populate({
+
+      path: 'conversations',
+      model:'conversations',
+      populate: [{
+        path:'messages',
+      }]
+    })
     res.status(200);
     res.send(items);
     // return res.body;
