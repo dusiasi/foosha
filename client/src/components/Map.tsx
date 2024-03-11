@@ -42,12 +42,9 @@ lng
 */
   // choose a location by clicking on the map
   const onMapClick = mapAsInput ? (e: google.maps.MapMouseEvent) => {
-    console.log("here")
     if(!e.latLng ) return 
     const lat:number = e.latLng.lat(); //  || 52.507389;
-    console.log("lat om click", e.latLng.lat())
     const lng:number = e.latLng.lng(); //  || 13.378096
-    console.log("lng:", e.latLng.lng())
     setMarker({ lat, lng });
     onLocationSelect && onLocationSelect({ lat, lng });
   } : null;

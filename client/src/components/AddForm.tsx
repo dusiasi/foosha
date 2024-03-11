@@ -69,6 +69,7 @@ function AddForm({ setShowAddForm }: propsType) {
     };
 
     try {
+      // console.log("Item date:", newItemData)
       const newItem = await postItem(newItemData);
       setList((prevList) => [...prevList, newItem]);
       setFormValues(initialState);
