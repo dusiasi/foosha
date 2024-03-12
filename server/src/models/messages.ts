@@ -20,13 +20,21 @@ const Message = new mongoose.Schema({
   dateTime: { type: Date, default: Date.now() },
 });
 
-async function updateDate(doc: MessageDocument) {
+// async function updateDate(doc: MessageDocument) {
+//   await mongoose
+//     .model('conversations')
+//     .updateOne({ _id: doc.conversation }, { dateTime: Date.now() });
+// }
+
+// Message.post('save', updateDate);
+
+async function updateConversation(doc: MessageDocument) {
   await mongoose
     .model('conversations')
-    .updateOne({ _id: doc.conversation }, { dateTime: Date.now() });
+    .updateOne({ _id: doc.conversation }, { $push: { conversations: doc } });
 }
 
-Message.post('save', updateDate);
+Message.post('save', updateConversation);
 
 const MessageModel = mongoose.model('messages', Message);
 export default MessageModel;

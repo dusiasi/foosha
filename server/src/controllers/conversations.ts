@@ -1,6 +1,6 @@
-import ConversationModel from '../models/conversations';
-import { Request, Response } from 'express';
-import ItemModel from '../models/items';
+import ConversationModel from "../models/conversations";
+import { Request, Response } from "express";
+import ItemModel from "../models/items";
 
 // posting new conversation to database
 export const postConversation = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const postConversation = async (req: Request, res: Response) => {
     const item = await ItemModel.findOne({
       _id: id,
     })
-      .populate('conversations')
+      .populate("conversations")
       .exec();
     console.log(item);
     if (item?.conversations.length) {
@@ -66,10 +66,8 @@ export const getConversationByItemId = async (req: Request, res: Response) => {
     })
       .populate("owner")
       .exec();
-    console.log("conversation: ", conversation);
     if (conversation) {
       res.status(200);
-
       res.json(conversation);
     } else {
       res.status(400);
