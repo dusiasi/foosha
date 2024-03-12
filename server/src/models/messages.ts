@@ -31,10 +31,19 @@ Message.post('save', updateDate);
 const MessageModel = mongoose.model('messages', Message);
 export default MessageModel;
 
-// {"message":"hello",
-//     "author":"65ef3460cba11b95b1ce15e8",
-//     "conversation":"",
-//     "read":"false",
-//     "datetime":"2024-03-11T16:46:41.110+00:00"
+// Middleware to update the conversation model when a message is saved
+// Message.post('save', async function (doc: MessageDocument) {
+//   try {
+//     const ConversationModel = mongoose.model('conversations');
+//     const conversation = await ConversationModel.findById(doc.conversation);
+//     if (conversation) {
+//       conversation.messages.push(doc._id);
+//       await conversation.save();
+//     }
+//   } catch (error) {
+//     console.error('Error updating conversation:', error);
+//   }
+// });
 
-// }
+// const MessageModel = mongoose.model('messages', Message);
+// export default MessageModel;
