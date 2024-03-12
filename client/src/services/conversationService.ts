@@ -30,7 +30,6 @@ export async function getAllConversations(): Promise<Conversation[]> {
     const data = await response.json();
     return data;
   } catch (error) {
-    // console.log(error);
     throw new Error('error getting conversation');
   }
 }

@@ -2,7 +2,7 @@ import { Message } from '../types';
 
 const rootUrl = `${
   import.meta.env.VITE_SERVER || 'http://localhost:4000'
-}/messages`;
+}/items/messages`;
 
 export async function getAllMessages(): Promise<Message[]> {
   try {
@@ -17,12 +17,12 @@ export async function getAllMessages(): Promise<Message[]> {
   }
 }
 
-export async function postMessage(body: Message): Promise<Message> {
+export async function postMessage(body: Omit<Message, "_id">): Promise<Message> {
   try {
     const response = await fetch(rootUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
@@ -30,6 +30,6 @@ export async function postMessage(body: Message): Promise<Message> {
     return data;
   } catch (error) {
     console.log(error);
-    throw new Error('Error posting message');
+    throw new Error("Error posting message");
   }
 }

@@ -8,7 +8,7 @@ export const postMessage = async (req: Request, res: Response) => {
   try {
     const { author, message, owner, itemId } = req.body;
     console.log(req.body)
-    // find item
+
     const item = await ItemModel.findOne({
       _id: itemId,
     })
@@ -20,7 +20,6 @@ export const postMessage = async (req: Request, res: Response) => {
       const newMessage = new MessageModel({
         author: author,
         message: message,
-        // conversation: id,
       });
       await newMessage.save();
 
@@ -37,13 +36,12 @@ export const postMessage = async (req: Request, res: Response) => {
       const newConversation = new ConversationModel({
         sender: author,
         owner: owner,
-        item: id,
+        item: itemId,
         date: Date.now(),
       });
       const newMessage = new MessageModel({
         author: author,
         message: message,
-        conversation: id,
       });
       await newMessage.save();
 
