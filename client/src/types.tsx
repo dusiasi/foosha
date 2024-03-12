@@ -26,7 +26,8 @@ export type Item = {
 export type Message = {
   _id: string;
   message: string;
-  author: User; // user _id of sender
+  author: string;
+  // owner: string;// user _id of sender
   itemId: string;
   read: boolean;
   dateTime: number; // Date
