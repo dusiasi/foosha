@@ -16,14 +16,20 @@ router.get('/items/:id', controllerItems.itemById); // in use
 router.put('/items/:id', controllerItems.editItem); // in use
 router.delete('/items/:id', controllerItems.deleteItem); // in use
 
-router.post('/messages', controllerMessages.postMessage); // in use
-router.get('/messages', controllerMessages.allMessages); // in use
+router.post('/items/:id/messages', controllerMessages.postMessage); // in use
+router.get('/items/:id/messages', controllerMessages.allMessages); // in use
 
-router.post('/conversations', controllerConversations.postConversation); // in use
-router.get('/conversations', controllerConversations.allConversations); // in use
-router.get(
-  '/conversations/:id/:contact',
-  controllerConversations.getConversationByItemId
-); // in use
+// router.post(
+//   '/items/:id/conversations',
+//   controllerConversations.postConversation
+// ); // in use
+// router.get(
+//   '/items/:id/conversations',
+//   controllerConversations.allConversations
+// ); // in use
+// router.get(
+//   '/conversations/:id/:contact',
+//   controllerConversations.getConversationByItemId
+// ); // in use
 
 export default router;

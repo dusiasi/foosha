@@ -1,42 +1,54 @@
 import MessageModel from "../models/messages";
 import { Request, Response } from "express";
+import ItemModel from "../models/items";
 import ConversationModel from "../models/conversations";
 
 // posting new message to database
 export const postMessage = async (req: Request, res: Response) => {
   try {
-    let conversationId = req.body.conversation;
-    const authorId = req.body.author;
-    // Check if a conversation ID is provided
-    if (!conversationId) {
-      // Create a new conversation if one does not exist
-      const newConversation = new ConversationModel({
-        // Assuming you need at least the owner and/or sender to create a conversation,
-        // You might need to adjust this according to your schema requirements
-        owner: authorId, // This assumes the message sender is the conversation owner, adjust as needed
-        messages: [], // Initialize with an empty array, will be updated below
+    const { author, message, owner } = req.body;
+    const { id } = req.params;
+
+    // check if selected item has a conversation
+    const item = await ItemModel.findOne({
+      _id: id,
+    })
+      .populate("conversations")
+      .exec();
+
+    if (item?.conversations.length) {
+      // res.status(201).json(message)
+      const newMessage = new MessageModel({
+        author: author,
+        message: message,
+        conversation: id,
       });
-      const savedConversation = await newConversation.save();
-      conversationId = savedConversation._id;
+      await newMessage.save();
+      res.status(201).send(newMessage);
+    } else {
+      const newConversation = new ConversationModel({
+        sender: author,
+        owner: owner,
+        item: id,
+        date: Date.now(),
+      });
+      await newConversation.save();
+
+      const newMessage = new MessageModel({
+        author: author,
+        message: message,
+        conversation: id,
+      });
+      await newMessage.save();
+      res.status(201);
+      res.send(newMessage);
     }
-
-    const messageData = { ...req.body, conversation: conversationId };
-    const newMessage = new MessageModel(messageData);
-    const savedMessage = await newMessage.save();
-
-    // Update the conversation to include this new message's ID
-    await ConversationModel.findByIdAndUpdate(
-      conversationId,
-      { $push: { messages: savedMessage._id } },
-      { new: true }
-    );
-
-    res.status(201).send(savedMessage);
   } catch (error) {
-    console.error(error); // Log the actual error
-    res.status(500).send({
+    console.error(error);
+    res.status(500);
+    res.send({
       message:
-        "An unexpected error occurred while posting the message. Please try again later.",
+        "An unexpected error occurred while creating the conversation. Please try again later.",
     });
   }
 };
@@ -54,6 +66,38 @@ export const allMessages = async (req: Request, res: Response) => {
     res.send({
       message:
         "An unexpected error occurred while getting the messages. Please try again later.",
+    });
+  }
+};
+
+// posting new conversation to database
+export const postConversation = async (req: Request, res: Response) => {
+  try {
+    // id
+    const { id } = req.params;
+    const conversation = req.body;
+    // check if selected item has a conversation
+    const item = await ItemModel.findOne({
+      _id: id,
+    })
+      .populate("conversations")
+      .exec();
+    console.log(item);
+    if (item?.conversations.length) {
+      res.status(201).json(conversation);
+    } else {
+      const newConversation = new ConversationModel(conversation);
+      newConversation.save();
+      res.status(201);
+      // console.log(newConversation);
+      res.send(newConversation);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+    res.send({
+      message:
+        "An unexpected error occurred while creating the conversation. Please try again later.",
     });
   }
 };
