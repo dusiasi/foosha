@@ -32,7 +32,7 @@ export const postMessage = async (req: Request, res: Response) => {
       conversationToUpdate!.messages.push(newMessage._id);
       console.log(conversationToUpdate);
       res.status(201);
-      res.send(newMessage);
+      res.send(conversationToUpdate);
 
       // if it doesn't add one
     } else {
