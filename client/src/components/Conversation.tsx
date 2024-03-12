@@ -62,11 +62,17 @@ function Conversation({ item: item }: { item: Item }) {
     }
   }
 
-  // show the messages belonging to each conversation
+// show the messages belonging to each conversation
+// useEffect(() => {
+//   const mappedConversations = list.flatMap((item) => item.conversations);
+//    const filteredConvos = mappedConversations.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
+//   setConversationArr(filteredConvos);
+  // }, [list]);
+
 useEffect(() => {
-  const mappedConversations = list.map((item) => item.conversations).flat();
-  console.log(mappedConversations);
-  setConversationArr(mappedConversations);
+  const mappedConversations = list.flatMap((item) => item.conversations);
+   const filteredConvos = mappedConversations.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
+  setConversationArr(filteredConvos);
 }, [list]);
 
   // show the contact info on the conversation
@@ -77,13 +83,31 @@ useEffect(() => {
   //     const updatedConversationList = conversationList.filter(
   //       (convo) => convo._id !== conversation._id
   //     );
-  //     setConversationList([
-  //       ...updatedConversationList,
-  //       { ...conversation, contact: itemContact, owner: itemOwner },
-  //     ]);
   //   }
   //   getOwnerAndContact(conversation._id);
   // }, []);
+
+
+  return (
+    list.map((item) => {
+      return (
+        <div>
+          <p>{item.title}</p>
+          <img src={item.image} />
+          {item.conversations
+            .filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id)
+            .map((conversation) => (
+              <div key={conversation._id}>
+                {conversation.message.map((message: MessageType) => (
+                    <p key={message._id}>{message.message}</p>
+                  ))}
+              </div>
+            ))}
+        </div>
+      );
+    })
+  );
+
 
   // return (
   //   <>
