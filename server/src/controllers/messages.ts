@@ -23,6 +23,7 @@ export const postMessage = async (req: Request, res: Response) => {
       })
         .populate('messages')
         .exec();
+      console.log(conversationToUpdate);
       const newMessage = new MessageModel({
         author: author,
         message: message,
@@ -30,7 +31,6 @@ export const postMessage = async (req: Request, res: Response) => {
       });
       await newMessage.save();
       conversationToUpdate!.messages.push(newMessage._id);
-      console.log(conversationToUpdate);
       res.status(201);
       res.send(conversationToUpdate);
 
@@ -76,38 +76,6 @@ export const allMessages = async (req: Request, res: Response) => {
     res.send({
       message:
         'An unexpected error occurred while getting the messages. Please try again later.',
-    });
-  }
-};
-
-// posting new conversation to database
-export const postConversation = async (req: Request, res: Response) => {
-  try {
-    // id
-    const { id } = req.params;
-    const conversation = req.body;
-    // check if selected item has a conversation
-    const item = await ItemModel.findOne({
-      _id: id,
-    })
-      .populate('conversations')
-      .exec();
-    console.log(item);
-    if (item?.conversations.length) {
-      res.status(201).json(conversation);
-    } else {
-      const newConversation = new ConversationModel(conversation);
-      newConversation.save();
-      res.status(201);
-      // console.log(newConversation);
-      res.send(newConversation);
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500);
-    res.send({
-      message:
-        'An unexpected error occurred while creating the conversation. Please try again later.',
     });
   }
 };
