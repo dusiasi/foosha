@@ -6,12 +6,11 @@ import ConversationModel from "../models/conversations";
 // posting new message to database
 export const postMessage = async (req: Request, res: Response) => {
   try {
-    const { author, message, owner } = req.body;
-    const { id } = req.params;
-
+    const { author, message, owner, itemId } = req.body;
+    console.log(req.body)
     // find item
     const item = await ItemModel.findOne({
-      _id: id,
+      _id: itemId,
     })
       .populate("conversations")
       .exec();
@@ -21,7 +20,7 @@ export const postMessage = async (req: Request, res: Response) => {
       const newMessage = new MessageModel({
         author: author,
         message: message,
-        conversation: id,
+        // conversation: id,
       });
       await newMessage.save();
 

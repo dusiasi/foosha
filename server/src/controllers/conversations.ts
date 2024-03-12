@@ -38,7 +38,7 @@ export const postConversation = async (req: Request, res: Response) => {
 export const allConversations = async (req: Request, res: Response) => {
   try {
     const conversations = await ConversationModel.find()
-      .populate("owner")
+      .populate("messages")
       .exec();
     res.status(200);
     res.send(conversations);
