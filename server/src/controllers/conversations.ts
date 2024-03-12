@@ -1,6 +1,6 @@
-import ConversationModel from '../models/conversations';
-import { Request, Response } from 'express';
-import ItemModel from '../models/items';
+import ConversationModel from "../models/conversations";
+import { Request, Response } from "express";
+import ItemModel from "../models/items";
 
 // posting new conversation to database
 export const postConversation = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const postConversation = async (req: Request, res: Response) => {
     const item = await ItemModel.findOne({
       _id: id,
     })
-      .populate('conversations')
+      .populate("conversations")
       .exec();
     console.log(item);
     if (item?.conversations.length) {
@@ -29,7 +29,7 @@ export const postConversation = async (req: Request, res: Response) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while creating the conversation. Please try again later.',
+        "An unexpected error occurred while creating the conversation. Please try again later.",
     });
   }
 };
@@ -38,7 +38,7 @@ export const postConversation = async (req: Request, res: Response) => {
 export const allConversations = async (req: Request, res: Response) => {
   try {
     const conversations = await ConversationModel.find()
-      .populate('owner')
+      .populate("messages")
       .exec();
     res.status(200);
     res.send(conversations);
@@ -48,14 +48,14 @@ export const allConversations = async (req: Request, res: Response) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while getting the conversations. Please try again later.',
+        "An unexpected error occurred while getting the conversations. Please try again later.",
     });
   }
 };
 
 // getting converation for a certain item and contact
 export const getConversationByItemId = async (req: Request, res: Response) => {
-  console.log(':::::: GET CONVERSTAION BY ITEM ROUTE ');
+  console.log(":::::: GET CONVERSTAION BY ITEM ROUTE ");
   try {
     const id = req.params.id;
     const contact = req.params.contact;
@@ -64,7 +64,7 @@ export const getConversationByItemId = async (req: Request, res: Response) => {
       itemId: id,
       contact: contact,
     })
-      .populate('owner')
+      .populate("owner")
       .exec();
     if (conversation) {
       res.status(200);
@@ -77,7 +77,7 @@ export const getConversationByItemId = async (req: Request, res: Response) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while getting the conversation. Please try again later.',
+        "An unexpected error occurred while getting the conversation. Please try again later.",
     });
   }
 };

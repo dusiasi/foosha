@@ -7,8 +7,8 @@ import {
 import { useMainContext } from './Context';
 import { postMessage } from '../services/messageService';
 import { Item, Message, Conversation as ConversationType } from '../types';
-import { initialState as initialStateType } from '../types';
-import Conversation from './Conversation';
+// import { initialState as initialStateType } from '../types';
+// import Conversation from './Conversation';
 
 type propsType = {
   item: Item;
@@ -17,78 +17,39 @@ type propsType = {
 
 function ContactForm({ item, setShowContactForm }: propsType) {
   const imageUrl = item.image ? item.image : 'no image';
-  const { user, setConversationList, setMessageList } = useMainContext();
+  const { user } = useMainContext();
 
-  const initialState: Message = {
-    _id: '',
-    message: '',
-    author: user._id,
-    thread: '',
-    read: false, // added
-    dateTime: Date.now(),
-  };
-
-  const [formValues, setFormValues] = useState(initialState);
+  const [formValue, setFormValue] = useState("")
 
   // changes in the form
   function changeHandler(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value });
+    const message = event.target.value;
+    setFormValue(message);
   }
 
-  // submitting the form
+  // // submitting the form
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const newMessage: Omit<Message, "_id"> = {
+      message: formValue,
+      owner: item.owner,
+      author: user._id,
+      itemId: item._id,
+      read: false,
+      dateTime: Date.now(),
+    };
+
     try {
-      async function createConversationAndMessage({ _id, author }: Message) {
-        // Is there already a conversation for this item?
-        const conversationInDb = await getConversationByItemId(
-          item._id,
-          author
-        ); // was user._id
-
-        console.log({ itemId: item._id, author });
-        // if so:
-
-        if (conversationInDb) {
-          console.log('conversation exists');
-          const newMessage = await postMessage({
-            ...formValues,
-            thread: conversationInDb._id,
-          });
-          // update message list
-          setMessageList((prevList) => [...prevList, newMessage]);
-        } else {
-          // create a new conversation first
-          const itemData: Omit<ConversationType, '_id'> = {
-            itemId: item._id,
-            itemName: item.title,
-            itemImage: imageUrl,
-            contact: user,
-            owner: user,
-            date: item.date,
-          };
-
-          const newConversation: ConversationType = await postConversation(
-            itemData
-          );
-          console.log({ newConversation });
-          // then post the message and add it to the new convo
-          const newMessage = await postMessage({
-            ...formValues,
-            thread: newConversation._id,
-          });
-
-          // add the new convo to list of conversations and update message list
-          setConversationList((prevList) => [...prevList, newConversation]);
-          setMessageList((prevList) => [...prevList, newMessage]);
-        }
-        // in any case:
-        setFormValues(initialState);
-        setShowContactForm(false);
+      async function createMessage() {
+        await postMessage(newMessage);
+          // setConversationList((prevList) => [...prevList, newConversation]);
+          setFormValue("");
       }
-      createConversationAndMessage(formValues);
-    } catch (error) {
+     createMessage();
+
+    }
+    catch (error) {
       console.log(error);
     }
   }
@@ -98,7 +59,7 @@ function ContactForm({ item, setShowContactForm }: propsType) {
       <input
         name="message"
         type="textarea"
-        value={formValues.message}
+        value={formValue}
         onChange={changeHandler}
         placeholder="message"
         required={true}

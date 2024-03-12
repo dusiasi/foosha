@@ -2,57 +2,54 @@ import MessageModel from '../models/messages';
 import { Request, Response } from 'express';
 import ItemModel from '../models/items';
 import ConversationModel from '../models/conversations';
+import conversations from './conversations';
+import mongoose, { ObjectId } from 'mongoose';
 
 // posting new message to database
 export const postMessage = async (req: Request, res: Response) => {
   try {
-    const { author, message, owner } = req.body;
-    const { id } = req.params;
+    const { author, message, owner, itemId } = req.body;
 
-    // find item
     const item = await ItemModel.findOne({
-      _id: id,
-    })
-      .populate('conversations')
-      .exec();
+      _id: itemId,
+    }).populate({ path: 'conversations', model: 'conversations' });
 
-    // check if selected item has a conversation
-    if (item?.conversations.length) {
-      const newMessage = new MessageModel({
-        author: author,
-        message: message,
-        conversation: id,
-      });
-      await newMessage.save();
+    if (!item) return res.send('No item found').status(401);
 
-      await ConversationModel.updateOne(
-        { sender: author },
-        { $push: { messages: newMessage._id } }
-      );
+    let convoWithUser;
+    for (const convoId of item.conversations) {
+      const conversation = await ConversationModel.findOne({ _id: convoId });
+      if (
+        conversation &&
+        conversation.sender?.equals(new mongoose.Types.ObjectId(author))
+      ) {
+        console.log('TRUE!!');
+        convoWithUser = conversation;
+        break;
+      }
+    }
 
-      res.status(201);
-      res.send(newMessage);
-
-      // if it doesn't add one
-    } else {
-      const newConversation = new ConversationModel({
+    if (!convoWithUser) {
+      convoWithUser = new ConversationModel({
         sender: author,
         owner: owner,
-        item: id,
+        item: itemId,
         date: Date.now(),
       });
-      const newMessage = new MessageModel({
-        author: author,
-        message: message,
-        conversation: id,
-      });
-      await newMessage.save();
-
-      newConversation.messages.push(newMessage._id);
-      await newConversation.save();
-      res.status(201);
-      res.send(newMessage);
     }
+
+    const newMessage = new MessageModel({
+      author: author,
+      message: message,
+      conversation: itemId,
+    });
+    await newMessage.save();
+
+    convoWithUser.messages.push(newMessage._id);
+    convoWithUser.save();
+
+    console.log(newMessage);
+    res.status(201).send(newMessage);
   } catch (error) {
     console.error(error);
     res.status(500);
@@ -65,6 +62,7 @@ export const postMessage = async (req: Request, res: Response) => {
 
 // getting all messages from database
 export const allMessages = async (req: Request, res: Response) => {
+  console.log('messages requested ---------------');
   try {
     const messages = await MessageModel.find().populate('author').exec();
     res.status(200);
