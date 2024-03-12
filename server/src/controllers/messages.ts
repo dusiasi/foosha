@@ -18,21 +18,20 @@ export const postMessage = async (req: Request, res: Response) => {
 
     // check if selected item has a conversation
     if (item?.conversations.length) {
-      const conversationToUpdate = await ConversationModel.findOne({
-        sender: author,
-      })
-        .populate('messages')
-        .exec();
-      console.log(conversationToUpdate);
       const newMessage = new MessageModel({
         author: author,
         message: message,
         conversation: id,
       });
       await newMessage.save();
-      conversationToUpdate!.messages.push(newMessage._id);
+
+      await ConversationModel.updateOne(
+        { sender: author },
+        { $push: { messages: newMessage._id } }
+      );
+
       res.status(201);
-      res.send(conversationToUpdate);
+      res.send(newMessage);
 
       // if it doesn't add one
     } else {
@@ -48,6 +47,7 @@ export const postMessage = async (req: Request, res: Response) => {
         conversation: id,
       });
       await newMessage.save();
+
       newConversation.messages.push(newMessage._id);
       await newConversation.save();
       res.status(201);
