@@ -7,48 +7,49 @@ import ConversationModel from "../models/conversations";
 export const postMessage = async (req: Request, res: Response) => {
   try {
     const { author, message, owner } = req.body;
-    const { id } = req.params;
+    const itemId = req.params.id; // This should be the item ID
 
-    // check if selected item has a conversation
-    const item = await ItemModel.findOne({
-      _id: id,
-    })
+    // Find the item and populate conversations to check if it exists
+    const item = await ItemModel.findById(itemId)
       .populate("conversations")
       .exec();
 
-    if (item?.conversations.length) {
-      // res.status(201).json(message)
-      const newMessage = new MessageModel({
-        author: author,
-        message: message,
-        conversation: id,
-      });
-      await newMessage.save();
-      res.status(201).send(newMessage);
+    let conversationId;
+
+    if (item && item.conversations && item.conversations.length > 0) {
+      // Optionally, you might want to select a specific conversation based on some criteria
+      conversationId = item.conversations[0]._id; // Assuming we use the first conversation for simplicity
     } else {
+      // If no conversation exists, create a new one
       const newConversation = new ConversationModel({
         sender: author,
         owner: owner,
-        item: id,
+        item: itemId,
         date: Date.now(),
       });
-      await newConversation.save();
+      const savedConversation = await newConversation.save();
+      conversationId = savedConversation._id;
 
-      const newMessage = new MessageModel({
-        author: author,
-        message: message,
-        conversation: id,
+      // Also, update the item to include this new conversation
+      await ItemModel.findByIdAndUpdate(itemId, {
+        $push: { conversations: conversationId },
       });
-      await newMessage.save();
-      res.status(201);
-      res.send(newMessage);
     }
+
+    // Now that we have the correct conversationId, create the message
+    const newMessage = new MessageModel({
+      author: author,
+      message: message,
+      conversation: conversationId, // Use the resolved conversation ID
+    });
+    await newMessage.save();
+
+    res.status(201).send(newMessage);
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send({
+    res.status(500).send({
       message:
-        "An unexpected error occurred while creating the conversation. Please try again later.",
+        "An unexpected error occurred while posting the message. Please try again later.",
     });
   }
 };
