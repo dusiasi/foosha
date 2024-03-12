@@ -2,54 +2,55 @@ import MessageModel from "../models/messages";
 import { Request, Response } from "express";
 import ItemModel from "../models/items";
 import ConversationModel from "../models/conversations";
+import conversations from "./conversations";
+import mongoose, { ObjectId } from "mongoose";
 
 // posting new message to database
 export const postMessage = async (req: Request, res: Response) => {
   try {
     const { author, message, owner, itemId } = req.body;
-    console.log(req.body)
-
-    const item = await ItemModel.findOne({
-      _id: itemId,
-    })
-      .populate("conversations")
-      .exec();
 
     // check if selected item has a conversation
-    if (item?.conversations.length) {
-      const newMessage = new MessageModel({
-        author: author,
-        message: message,
-      });
-      await newMessage.save();
+    const item = await ItemModel.findOne({
+      _id: itemId,
+    }).populate({ path: "conversations", model: "conversations" });
 
-      await ConversationModel.updateOne(
-        { sender: author },
-        { $push: { messages: newMessage._id } }
-      );
+    if (!item) return res.send("No item found").status(401);
 
-      res.status(201);
-      res.send(newMessage);
+    let convoWithUser;
+    for (const convoId of item.conversations) {
+      const conversation = await ConversationModel.findOne({ _id: convoId });
+      if (
+        conversation &&
+        conversation.sender?.equals(new mongoose.Types.ObjectId(author))
+      ) {
+        console.log("TRUE!!");
+        convoWithUser = conversation;
+        break;
+      }
+    }
 
-      // if it doesn't add one
-    } else {
-      const newConversation = new ConversationModel({
+    if (!convoWithUser) {
+      convoWithUser = new ConversationModel({
         sender: author,
         owner: owner,
         item: itemId,
         date: Date.now(),
       });
-      const newMessage = new MessageModel({
-        author: author,
-        message: message,
-      });
-      await newMessage.save();
-
-      newConversation.messages.push(newMessage._id);
-      await newConversation.save();
-      res.status(201);
-      res.send(newMessage);
     }
+
+    const newMessage = new MessageModel({
+      author: author,
+      message: message,
+      conversation: itemId,
+    });
+    await newMessage.save();
+
+    convoWithUser.messages.push(newMessage._id);
+    convoWithUser.save();
+
+    console.log(newMessage);
+    res.status(201).send(newMessage);
   } catch (error) {
     console.error(error);
     res.status(500);
@@ -76,5 +77,37 @@ export const allMessages = async (req: Request, res: Response) => {
     });
   }
 };
+
+// // posting new conversation to database
+// export const postConversation = async (req: Request, res: Response) => {
+//   try {
+//     // id
+//     const { id } = req.params;
+//     const conversation = req.body;
+//     // check if selected item has a conversation
+//     const item = await ItemModel.findOne({
+//       _id: id,
+//     })
+//       .populate("conversations")
+//       .exec();
+//     console.log(item);
+//     if (item?.conversations.length) {
+//       res.status(201).json(conversation);
+//     } else {
+//       const newConversation = new ConversationModel(conversation);
+//       newConversation.save();
+//       res.status(201);
+//       // console.log(newConversation);
+//       res.send(newConversation);
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500);
+//     res.send({
+//       message:
+//         "An unexpected error occurred while creating the conversation. Please try again later.",
+//     });
+//   }
+// };
 
 export default { postMessage, allMessages };
