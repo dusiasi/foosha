@@ -24,7 +24,6 @@ function ContactForm({ item, setShowContactForm }: propsType) {
   // changes in the form
   function changeHandler(event: React.ChangeEvent<HTMLInputElement>) {
     const message = event.target.value;
-    console.log(message)
     setFormValue(message);
   }
 
@@ -41,7 +40,6 @@ function ContactForm({ item, setShowContactForm }: propsType) {
       dateTime: Date.now(),
     };
 
-    console.log(newMessage);
     try {
       async function createMessage() {
         await postMessage(newMessage);
