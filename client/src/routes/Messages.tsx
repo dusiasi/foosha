@@ -5,12 +5,12 @@ import './Messages.css';
 function Messages() {
   const { user, conversationList } = useMainContext();
 
-  console.log(conversationList); //logs it
+ 
   conversationList.map((elem) => {
     console.log(elem.owner._id), console.log(elem.contact);
     console.log(user._id);
-    if (elem.owner === user._id || elem.contact === user._id)
-      console.log('hey');
+    if (elem.owner === user._id || elem.contact === user._id){}
+      
     else console.log('something wrong');
   });
 
