@@ -9,22 +9,32 @@ export const postMessage = async (req: Request, res: Response) => {
     const { author, message, owner } = req.body;
     const { id } = req.params;
 
-    // check if selected item has a conversation
+    // find item
     const item = await ItemModel.findOne({
       _id: id,
     })
       .populate('conversations')
       .exec();
 
+    // check if selected item has a conversation
     if (item?.conversations.length) {
-      // res.status(201).json(message)
+      const conversationToUpdate = await ConversationModel.findOne({
+        sender: author,
+      })
+        .populate('messages')
+        .exec();
       const newMessage = new MessageModel({
         author: author,
         message: message,
         conversation: id,
       });
       await newMessage.save();
-      res.status(201).send(newMessage);
+      conversationToUpdate!.messages.push(newMessage._id);
+      console.log(conversationToUpdate);
+      res.status(201);
+      res.send(newMessage);
+
+      // if it doesn't add one
     } else {
       const newConversation = new ConversationModel({
         sender: author,
@@ -32,14 +42,14 @@ export const postMessage = async (req: Request, res: Response) => {
         item: id,
         date: Date.now(),
       });
-      await newConversation.save();
-
       const newMessage = new MessageModel({
         author: author,
         message: message,
         conversation: id,
       });
       await newMessage.save();
+      newConversation.messages.push(newMessage._id);
+      await newConversation.save();
       res.status(201);
       res.send(newMessage);
     }
