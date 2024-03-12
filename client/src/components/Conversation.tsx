@@ -23,7 +23,7 @@ type FormValue = {
   dateTime: number;
 };
 
-function Conversation({ item: conversation }: { item: ConversationType }) {
+function Conversation({ item: Item }: { item: Item }) {
   const [showChat, setShowChat] = useState(false);
   const [messagesByConversation, setMessagesByConversation] = useState<
     MessageType[]
@@ -60,8 +60,8 @@ function Conversation({ item: conversation }: { item: ConversationType }) {
     try {
       async function sendMessage(formValues: FormValue) {
         const newMessage = await postMessage(formValues);
-        setMessageList((prevList) => [...prevList, newMessage]);
-        setFormValues(initialState);
+        // setMessageList((prevList) => [...prevList, newMessage]);
+        // setFormValues(initialState);
       }
       sendMessage(formValues);
     } catch (error) {

@@ -2,26 +2,7 @@ import { Conversation, Item, User } from '../types';
 const rootUrl = `${
   import.meta.env.VITE_SERVER || 'http://localhost:4000'
 }/conversations`;
-export async function postConversation(
-  body: Omit<Conversation, '_id'>
-): Promise<Conversation> {
-  try {
-    const response = await fetch(rootUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
 
-    const data = await response.json();
-    // console.log(data);
-    return data;
-  } catch (error) {
-    // console.log(error);
-    throw new Error('error posting conversation');
-  }
-}
 export async function getAllConversations(): Promise<Conversation[]> {
   try {
     const response = await fetch(rootUrl, {
@@ -33,23 +14,4 @@ export async function getAllConversations(): Promise<Conversation[]> {
     throw new Error('error getting conversation');
   }
 }
-export async function getConversationByItemId(
-  id: string,
-  contact: string
-): Promise<Conversation> {
-  try {
-    const response = await fetch(`${rootUrl}/${id}/${contact}`);
-    const data = await response.json();
-    return data;
-    if (response.ok) {
-      // const data = await response.json();
-      console.log(data);
-      return data;
-    } else {
-      throw new Error(response.statusText);
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error('error getting conversation');
-  }
-}
+
