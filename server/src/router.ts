@@ -16,8 +16,8 @@ router.get('/items/:id', controllerItems.itemById); // in use
 router.put('/items/:id', controllerItems.editItem); // in use
 router.delete('/items/:id', controllerItems.deleteItem); // in use
 
-router.post('/items/:id/messages', controllerMessages.postMessage); // in use
-router.get('/items/:id/messages', controllerMessages.allMessages); // in use
+router.post('/items/messages', controllerMessages.postMessage); // in use
+router.get('/items/messages', controllerMessages.allMessages); // in use
 
 // router.post(
 //   '/items/:id/conversations',
