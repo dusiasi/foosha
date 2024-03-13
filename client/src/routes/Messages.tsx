@@ -12,9 +12,7 @@ function Messages() {
         {!list.length ? (
           <p>Slide into their DMs! 💚</p>
         ) : (
-          list.map((item) =>
-         <Conversation key={item._id} item={item}></Conversation>
-            )
+          list.map((item) => <Conversation key={item._id}></Conversation>)
         )}
       </div>
     </>

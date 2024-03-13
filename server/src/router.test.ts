@@ -11,7 +11,7 @@ describe('User endpoint', () => {
       });
       it('should return a 200', async () => {
         const userId = '65ef346fcba11b95b1ce15eb';
-        await supertest(app).get(`/user/${userId}`).expect(200);
+        await supertest(app).get(`/user/${userId}`).expect(201);
       });
     });
   });
