@@ -68,14 +68,9 @@ export default function ContextProvider({ children }: PropsWithChildren) {
     async function fetchAndSet() {
       fetchUserLocation(setLocation);
       const itemData = await getAllItems();
-      const convoData = await getAllConversations();
-      // const messageData = await getAllMessages();
       const sortedItems = sortByDate(itemData, 'date');
-      // const sortedConvos = sortByDate(convoData, 'date');
-      // const sortedMessages = sortByDate(messageData, 'dateTime');
       setList(itemData);
-      setConversationList(convoData);
-      // setMessageList(sortedMessages);
+
     }
     fetchAndSet();
   }, []);

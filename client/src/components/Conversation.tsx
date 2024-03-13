@@ -65,128 +65,99 @@ function Conversation({ item: item }: { item: Item }) {
 
 useEffect(() => {
   const mappedItems = list.flatMap((item) => item.conversations);
-  const filteredConvos = mappedItems.filter((convo) => convo.sender === user._id || convo.owner === user._id);
+  const filteredConvos = mappedItems.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
   setConversationArr(filteredConvos);
 }, [list]);
-console.log(conversationArr)
+// console.log(conversationArr)
 
+  return (
+    <>
 
-  // show the contact info on the conversation
-  // useEffect(() => {
-  //   async function getOwnerAndContact(id: string) {
-  //     const itemOwner = await getUserById(conversation.owner._id);
-  //     const itemContact = await getUserById(conversation.contact._id);
-  //     const updatedConversationList = conversationList.filter(
-  //       (convo) => convo._id !== conversation._id
-  //     );
-  //   }
-  //   getOwnerAndContact(conversation._id);
-  // }, []);
+      {conversationArr.map((convo) =>
 
+      <div id="thread-with-chat" key={convo._id}>
+        <div id="thread">
+          <img src={convo.item.image} id="thread-image" />
+          <div id="thread-info">
+            <h3>{convo.item.title}</h3>
+            {convo.messages.map((message, i) =>
+              i === convo.messages.length - 1 ? (
+                <div id="last-message-info" key={i}>
+                  <p>
+                    {" "}
+                    {convo.messages.length} message
+                    {convo.messages.length > 1 ? "s" : ""}{" "}
+                  </p>
+                  <p>last message: {formatDateTime(new Date(message.dateTime))}</p>
+                  {message.author != user._id ? (
+                    <p id="your-turn-badge">{"your turn!"}</p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                ""
+              )
+            )}
+          </div>
+            {convo.owner._id === user._id ? ( // changed to _id
 
-  // return (
-  //   list.map((item) => {
-  //     return (
-  //       <div>
-  //         <p>{item.title}</p>
-  //         <img src={item.image} />
-  //         {item.conversations
-  //           .filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id)
-  //           .map((conversation) => (
-  //             <div key={conversation._id}>
-  //               {conversation.message.map((message: MessageType) => (
-  //                   <p key={message._id}>{message.message}</p>
-  //                 ))}
-  //             </div>
-  //           ))}
-  //       </div>
-  //     );
-  //   })
-  // );
+            <div id="contact-info">
+                <img id="contact-image" src={convo.sender.image}></img>
+              <p id="contact-name">{convo.sender.name}</p>
+            </div>
+          ) : convo.sender._id === user._id ? (
+            <div id="owner-info">
+              <img id="owner-image" src={convo.owner.image}></img>
+              <p id="owner-name">{convo.owner.name}</p>
+            </div>
+          ) : null}
+        </div>
+        <div>
+          <button
+            id="chat-toggle-button"
+            onClick={() => setShowChat(!showChat)}
+          >
+            {showChat ? "hide chat " : "show chat "}
+            <FaCommentDots></FaCommentDots>{" "}
+          </button>
+          {showChat ? (
+            <div
+              id="chat"
+              style={{
+                ...(convo.item.image && {
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${conversation.itemImage})`,
+                }),
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              <div id="chat-bubbles">
+                {messagesByConversation.map((message) => (
+                  <Message key={message.author} item={message}></Message>
+                ))}
+              </div>
+              <form id="chat-form" onSubmit={submitHandler}>
+                <input
+                  type="text"
+                  name="message"
+                  value={formValues}
+                  onChange={changeHandler}
+                  placeholder="Be nice!"
+                />
+                <button className="save-button button-turqouise" type="submit">
+                  Send
+                </button>
+              </form>
+            </div>
+          ) : null}
+        </div>
+      </div>
+      )}
 
-
-  // return (
-  //   <>
-  //     <div id="thread-with-chat">
-  //       <div id="thread">
-  //         <img src={conversation.itemImage} id="thread-image" />
-  //         <div id="thread-info">
-  //           <h3>{conversation.itemName}</h3>
-  //           {messagesByConversation.map((elem, i) =>
-  //             i === messagesByConversation.length - 1 ? (
-  //               <div id="last-message-info" key={i}>
-  //                 <p>
-  //                   {" "}
-  //                   {messagesByConversation.length} message
-  //                   {messagesByConversation.length > 1 ? "s" : ""}{" "}
-  //                 </p>
-  //                 <p>last message: {formatDateTime(new Date(elem.dateTime))}</p>
-  //                 {elem.author != user._id ? (
-  //                   <p id="your-turn-badge">{"your turn!"}</p>
-  //                 ) : (
-  //                   ""
-  //                 )}
-  //               </div>
-  //             ) : (
-  //               ""
-  //             )
-  //           )}
-  //         </div>
-  //         {conversation.owner._id === user._id ? ( // changed to _id
-  //           <div id="contact-info">
-  //             <img id="contact-image" src={conversation.contact.image}></img>
-  //             <p id="contact-name">{conversation.contact.name}</p>
-  //           </div>
-  //         ) : conversation.contact._id === user._id ? (
-  //           <div id="owner-info">
-  //             <img id="owner-image" src={conversation.owner.image}></img>
-  //             <p id="owner-name">{conversation.owner.name}</p>
-  //           </div>
-  //         ) : null}
-  //       </div>
-  //       <div>
-  //         <button
-  //           id="chat-toggle-button"
-  //           onClick={() => setShowChat(!showChat)}
-  //         >
-  //           {showChat ? "hide chat " : "show chat "}
-  //           <FaCommentDots></FaCommentDots>{" "}
-  //         </button>
-  //         {showChat ? (
-  //           <div
-  //             id="chat"
-  //             style={{
-  //               ...(conversation.itemImage && {
-  //                 backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${conversation.itemImage})`,
-  //               }),
-  //               backgroundSize: "cover",
-  //               backgroundPosition: "center",
-  //               backgroundRepeat: "no-repeat",
-  //             }}
-  //           >
-  //             <div id="chat-bubbles">
-  //               {messagesByConversation.map((elem) => (
-  //                 <Message key={elem.author} item={elem}></Message>
-  //               ))}
-  //             </div>
-  //             <form id="chat-form" onSubmit={submitHandler}>
-  //               <input
-  //                 type="text"
-  //                 name="message"
-  //                 value={formValues.message}
-  //                 onChange={changeHandler}
-  //                 placeholder="Be nice!"
-  //               />
-  //               <button className="save-button button-turqouise" type="submit">
-  //                 Send
-  //               </button>
-  //             </form>
-  //           </div>
-  //         ) : null}
-  //       </div>
-  //     </div>
-  //   </>
-  // );
+    </>
+  );
 }
 
 export default Conversation;

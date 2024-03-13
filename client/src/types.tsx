@@ -27,7 +27,7 @@ export type Message = {
   _id: string;
   message: string;
   author: string;
-  // owner: string;// user _id of sender
+  owner: User;// user _id of sender
   itemId: string;
   read: boolean;
   dateTime: number; // Date
@@ -35,10 +35,10 @@ export type Message = {
 
 export type Conversation = {
   _id: string;
-  message: Message[];
-  item: string; // item name which this conversation is about
-  sender: string; // user _id of the contacting person
-  owner: string;
+  messages: Message[];
+  item: Item; // item name which this conversation is about
+  sender: User; // user _id of the contacting person
+  owner: User;
   date: Date; // date of conversation start
 };
 

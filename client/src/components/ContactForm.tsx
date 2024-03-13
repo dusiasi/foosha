@@ -1,14 +1,8 @@
-import { Dispatch, useState, SetStateAction } from 'react';
-import './ContactForm.css';
-import {
-  getConversationByItemId,
-  postConversation,
-} from '../services/conversationService';
-import { useMainContext } from './Context';
-import { postMessage } from '../services/messageService';
-import { Item, Message, Conversation as ConversationType } from '../types';
-// import { initialState as initialStateType } from '../types';
-// import Conversation from './Conversation';
+import { Dispatch, useState, SetStateAction } from "react";
+import "./ContactForm.css";
+import { useMainContext } from "./Context";
+import { postMessage } from "../services/messageService";
+import { Item, Message, Conversation as ConversationType } from "../types";
 
 type propsType = {
   item: Item;
@@ -16,10 +10,10 @@ type propsType = {
 };
 
 function ContactForm({ item, setShowContactForm }: propsType) {
-  const imageUrl = item.image ? item.image : 'no image';
+  const imageUrl = item.image ? item.image : "no image";
   const { user } = useMainContext();
 
-  const [formValue, setFormValue] = useState("")
+  const [formValue, setFormValue] = useState("");
 
   // changes in the form
   function changeHandler(event: React.ChangeEvent<HTMLInputElement>) {
@@ -33,7 +27,7 @@ function ContactForm({ item, setShowContactForm }: propsType) {
 
     const newMessage: Omit<Message, "_id"> = {
       message: formValue,
-      // owner: item.owner,
+      owner: item.owner,
       author: user._id,
       itemId: item._id,
       read: false,
@@ -43,13 +37,11 @@ function ContactForm({ item, setShowContactForm }: propsType) {
     try {
       async function createMessage() {
         await postMessage(newMessage);
-          // setConversationList((prevList) => [...prevList, newConversation]);
-          setFormValue("");
+        // setConversationList((prevList) => [...prevList, newConversation]);
+        setFormValue("");
       }
-     createMessage();
-
-    }
-    catch (error) {
+      createMessage();
+    } catch (error) {
       console.log(error);
     }
   }
