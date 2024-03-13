@@ -18,6 +18,5 @@ router.put('/items/:id', controllerItems.editItem); // in use
 router.delete('/items/:id', controllerItems.deleteItem); // in use
 
 router.post('/items/messages', controllerMessages.postMessage); // in use
-router.get('/conversations', controllerConversations.allConversations); // in use
 
 export default router;

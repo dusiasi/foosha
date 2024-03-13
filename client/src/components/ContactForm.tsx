@@ -28,7 +28,7 @@ function ContactForm({ item, setShowContactForm }: propsType) {
     const newMessage: Omit<Message, "_id"> = {
       message: formValue,
       owner: item.owner,
-      author: user._id,
+      author: user,
       itemId: item._id,
       read: false,
       dateTime: Date.now(),

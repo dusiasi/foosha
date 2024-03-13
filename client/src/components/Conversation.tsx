@@ -14,11 +14,7 @@ import {
   Message as MessageType,
 } from "../types";
 
-function Conversation({ item: item }: { item: Item }) {
-  const [showChat, setShowChat] = useState(false);
-  const [messagesByConversation, setMessagesByConversation] = useState<
-    MessageType[]
-  >([]);
+function Conversation() {
 
   const {
     user,
@@ -29,6 +25,7 @@ function Conversation({ item: item }: { item: Item }) {
     conversationList,
   } = useMainContext();
 
+  const [showChat, setShowChat] = useState(false);
   const [formValues, setFormValues] = useState("");
   const [conversationArr, setConversationArr] = useState<ConversationType[]>([]);
 
@@ -44,8 +41,8 @@ function Conversation({ item: item }: { item: Item }) {
 
     const newMessage: Omit<MessageType, "_id"> = {
       message: formValues,
-      // owner: item.owner,
-      author: user._id,
+      owner: item.owner,
+      author: user,
       itemId: item._id,
       read: false,
       dateTime: Date.now(),
@@ -64,44 +61,45 @@ function Conversation({ item: item }: { item: Item }) {
 
 
 useEffect(() => {
-  const mappedItems = list.flatMap((item) => item.conversations);
-  const filteredConvos = mappedItems.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
+  const mappedItems = list.flatMap((item) => item.conversations)
+  const filteredConvos = mappedItems.filter(
+    (convo) => convo.owner._id === user._id || convo.sender._id === user._id
+  );
   setConversationArr(filteredConvos);
 }, [list]);
-// console.log(conversationArr)
+
 
   return (
     <>
-
       {conversationArr.map((convo) =>
+      <div id="thread-with-chat">
 
-      <div id="thread-with-chat" key={convo._id}>
         <div id="thread">
-          <img src={convo.item.image} id="thread-image" />
-          <div id="thread-info">
-            <h3>{convo.item.title}</h3>
-            {convo.messages.map((message, i) =>
-              i === convo.messages.length - 1 ? (
-                <div id="last-message-info" key={i}>
-                  <p>
-                    {" "}
-                    {convo.messages.length} message
-                    {convo.messages.length > 1 ? "s" : ""}{" "}
-                  </p>
-                  <p>last message: {formatDateTime(new Date(message.dateTime))}</p>
-                  {message.author != user._id ? (
-                    <p id="your-turn-badge">{"your turn!"}</p>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                ""
-              )
-            )}
-          </div>
-            {convo.owner._id === user._id ? ( // changed to _id
+            <img src={convo.item.image} id="thread-image" />
+            <div id="thread-info">
+                <h3>{convo.item.title}</h3>
+              {convo.messages.map((message, i) =>
+                i === convo.messages.length - 1 ? (
+                  <div id="last-message-info" key={i}>
+                    <p>
+                      {" "}
+                      {convo.messages.length} message
+                      {convo.messages.length > 1 ? "s" : ""}{" "}
+                    </p>
+                    <p>last message: {formatDateTime(new Date(message.dateTime))}</p>
+                    {message.author._id != user._id ? (
+                      <p id="your-turn-badge">{"your turn!"}</p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                ) : (
+                  ""
+                )
+              )}
+            </div>
 
+            {convo.owner._id === user._id ? (
             <div id="contact-info">
                 <img id="contact-image" src={convo.sender.image}></img>
               <p id="contact-name">{convo.sender.name}</p>
@@ -111,22 +109,25 @@ useEffect(() => {
               <img id="owner-image" src={convo.owner.image}></img>
               <p id="owner-name">{convo.owner.name}</p>
             </div>
-          ) : null}
-        </div>
-        <div>
+            ) : null}
+
+          </div>
+
+      <div className="messages-wrapper">
           <button
             id="chat-toggle-button"
             onClick={() => setShowChat(!showChat)}
           >
             {showChat ? "hide chat " : "show chat "}
             <FaCommentDots></FaCommentDots>{" "}
-          </button>
+            </button>
+
           {showChat ? (
             <div
               id="chat"
               style={{
                 ...(convo.item.image && {
-                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${conversation.itemImage})`,
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${convo.item.image})`,
                 }),
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -134,8 +135,8 @@ useEffect(() => {
               }}
             >
               <div id="chat-bubbles">
-                {messagesByConversation.map((message) => (
-                  <Message key={message.author} item={message}></Message>
+                {convo.messages.map((message) => (
+                  <Message key={message.author._id} item={message}></Message>
                 ))}
               </div>
               <form id="chat-form" onSubmit={submitHandler}>
@@ -151,8 +152,10 @@ useEffect(() => {
                 </button>
               </form>
             </div>
-          ) : null}
-        </div>
+            ) : null}
+
+          </div>
+
       </div>
       )}
 
