@@ -14,7 +14,11 @@ import {
   Message as MessageType,
 } from '../types';
 
-function Conversation() {
+type propsType = {
+  conversation: ConversationType;
+};
+
+function Conversation({ conversation }: propsType) {
   const {
     user,
     messageList,
@@ -26,9 +30,9 @@ function Conversation() {
 
   const [showChat, setShowChat] = useState(false);
   const [formValues, setFormValues] = useState('');
-  const [conversationArr, setConversationArr] = useState<ConversationType[]>(
-    []
-  );
+  // const [conversationArr, setConversationArr] = useState<ConversationType[]>(
+  //   []
+  // );
 
   // changes in the form
   function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -38,17 +42,16 @@ function Conversation() {
 
   // send a new message
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
 
+    e.preventDefault();
     const newMessage: Omit<MessageType, '_id'> = {
       message: formValues,
-      owner: item.owner,
+      owner: conversation.owner,
       author: user,
-      itemId: item._id,
+      itemId: conversation._id,
       read: false,
       dateTime: Date.now(),
     };
-
     try {
       async function sendMessage() {
         const newMsg = await postMessage(newMessage);
@@ -60,29 +63,20 @@ function Conversation() {
     }
   }
 
-  useEffect(() => {
-    const mappedItems = list.flatMap((item) => item.conversations);
-    const filteredConvos = mappedItems.filter(
-      (convo) => convo.owner._id === user._id || convo.sender._id === user._id
-    );
-    setConversationArr(filteredConvos);
-  }, [list]);
-
   return (
     <>
-      {conversationArr.map((convo) => (
         <div id="thread-with-chat">
           <div id="thread">
-            <img src={convo.item.image} id="thread-image" />
+            <img src={conversation.item.image} id="thread-image" />
             <div id="thread-info">
-              <h3>{convo.item.title}</h3>
-              {convo.messages.map((message, i) =>
-                i === convo.messages.length - 1 ? (
+              <h3>{conversation.item.title}</h3>
+              {conversation.messages.map((message, i) =>
+                i === conversation.messages.length - 1 ? (
                   <div id="last-message-info" key={i}>
                     <p>
                       {' '}
-                      {convo.messages.length} message
-                      {convo.messages.length > 1 ? 's' : ''}{' '}
+                      {conversation.messages.length} message
+                      {conversation.messages.length > 1 ? 's' : ''}{' '}
                     </p>
                     <p>
                       last message: {formatDateTime(new Date(message.dateTime))}
@@ -99,15 +93,15 @@ function Conversation() {
               )}
             </div>
 
-            {convo.owner._id === user._id ? (
+            {conversation.owner._id === user._id ? (
               <div id="contact-info">
-                <img id="contact-image" src={convo.sender.image}></img>
-                <p id="contact-name">{convo.sender.name}</p>
+                <img id="contact-image" src={conversation.sender.image}></img>
+                <p id="contact-name">{conversation.sender.name}</p>
               </div>
-            ) : convo.sender._id === user._id ? (
+            ) : conversation.sender._id === user._id ? (
               <div id="owner-info">
-                <img id="owner-image" src={convo.owner.image}></img>
-                <p id="owner-name">{convo.owner.name}</p>
+                <img id="owner-image" src={conversation.owner.image}></img>
+                <p id="owner-name">{conversation.owner.name}</p>
               </div>
             ) : null}
           </div>
@@ -125,8 +119,8 @@ function Conversation() {
               <div
                 id="chat"
                 style={{
-                  ...(convo.item.image && {
-                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${convo.item.image})`,
+                  ...(conversation.item.image && {
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${conversation.item.image})`,
                   }),
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
@@ -134,7 +128,7 @@ function Conversation() {
                 }}
               >
                 <div id="chat-bubbles">
-                  {convo.messages.map((message) => (
+                  {conversation.messages.map((message) => (
                     <Message key={message.author._id} item={message}></Message>
                   ))}
                 </div>
@@ -157,7 +151,7 @@ function Conversation() {
             ) : null}
           </div>
         </div>
-      ))}
+
     </>
   );
 }
