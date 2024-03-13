@@ -45,9 +45,20 @@ export const allItems = async (req: Request, res: Response) => {
         },
         {
           path: "item",
+          select: "image title"
+        },
+        {
+          path: "owner",
+          select: "image name"
+        },
+        {
+          path: "sender",
+          select: "image name"
         },
       ],
     });
+
+
     res.status(200);
     res.send(items);
     // return res.body;

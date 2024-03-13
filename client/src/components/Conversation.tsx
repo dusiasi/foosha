@@ -65,7 +65,7 @@ function Conversation({ item: item }: { item: Item }) {
 
 useEffect(() => {
   const mappedItems = list.flatMap((item) => item.conversations);
-  const filteredConvos = mappedItems.filter((convo) => convo.sender === user._id || convo.owner === user._id);
+  const filteredConvos = mappedItems.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
   setConversationArr(filteredConvos);
 }, [list]);
 // console.log(conversationArr)
@@ -74,24 +74,22 @@ useEffect(() => {
     <>
 
       {conversationArr.map((convo) =>
-          console.log(convo.item.title)
-      )}
 
-      {/* <div id="thread-with-chat">
+      <div id="thread-with-chat">
         <div id="thread">
-          <img src={conversation.itemImage} id="thread-image" />
+          <img src={convo.item.image} id="thread-image" />
           <div id="thread-info">
-            <h3>{conversation.itemName}</h3>
-            {messagesByConversation.map((elem, i) =>
-              i === messagesByConversation.length - 1 ? (
+            <h3>{convo.item.title}</h3>
+            {convo.messages.map((message, i) =>
+              i === convo.messages.length - 1 ? (
                 <div id="last-message-info" key={i}>
                   <p>
                     {" "}
-                    {messagesByConversation.length} message
-                    {messagesByConversation.length > 1 ? "s" : ""}{" "}
+                    {convo.messages.length} message
+                    {convo.messages.length > 1 ? "s" : ""}{" "}
                   </p>
-                  <p>last message: {formatDateTime(new Date(elem.dateTime))}</p>
-                  {elem.author != user._id ? (
+                  <p>last message: {formatDateTime(new Date(message.dateTime))}</p>
+                  {message.author != user._id ? (
                     <p id="your-turn-badge">{"your turn!"}</p>
                   ) : (
                     ""
@@ -102,15 +100,16 @@ useEffect(() => {
               )
             )}
           </div>
-          {conversation.owner._id === user._id ? ( // changed to _id
+            {convo.owner._id === user._id ? ( // changed to _id
+
             <div id="contact-info">
-              <img id="contact-image" src={conversation.contact.image}></img>
-              <p id="contact-name">{conversation.contact.name}</p>
+                <img id="contact-image" src={convo.sender.image}></img>
+              <p id="contact-name">{convo.sender.name}</p>
             </div>
-          ) : conversation.contact._id === user._id ? (
+          ) : convo.sender._id === user._id ? (
             <div id="owner-info">
-              <img id="owner-image" src={conversation.owner.image}></img>
-              <p id="owner-name">{conversation.owner.name}</p>
+              <img id="owner-image" src={convo.owner.image}></img>
+              <p id="owner-name">{convo.owner.name}</p>
             </div>
           ) : null}
         </div>
@@ -126,7 +125,7 @@ useEffect(() => {
             <div
               id="chat"
               style={{
-                ...(conversation.itemImage && {
+                ...(convo.item.image && {
                   backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${conversation.itemImage})`,
                 }),
                 backgroundSize: "cover",
@@ -135,15 +134,15 @@ useEffect(() => {
               }}
             >
               <div id="chat-bubbles">
-                {messagesByConversation.map((elem) => (
-                  <Message key={elem.author} item={elem}></Message>
+                {messagesByConversation.map((message) => (
+                  <Message key={message.author} item={message}></Message>
                 ))}
               </div>
               <form id="chat-form" onSubmit={submitHandler}>
                 <input
                   type="text"
                   name="message"
-                  value={formValues.message}
+                  value={formValues}
                   onChange={changeHandler}
                   placeholder="Be nice!"
                 />
@@ -154,7 +153,9 @@ useEffect(() => {
             </div>
           ) : null}
         </div>
-      </div> */}
+      </div>
+      )}
+
     </>
   );
 }
