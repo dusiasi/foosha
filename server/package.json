@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm i",
-    "start": "node index.js"
+    "test": "jest --watch",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "tsc && concurrently \"tsc --watch \"  \" nodemon ./dist/index.js\" "
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.17.21",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.2",
     "cors": "^2.8.5",
@@ -19,5 +20,17 @@
     "mongoose": "^8.2.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.2"
   }
 }
