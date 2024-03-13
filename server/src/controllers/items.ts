@@ -43,6 +43,9 @@ export const allItems = async (req: Request, res: Response) => {
         {
           path: "messages",
         },
+        {
+          path: "item",
+        },
       ],
     });
     res.status(200);
