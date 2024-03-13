@@ -14,7 +14,7 @@ function Message({ item: item }: { item: MessageType}) {
 
   return (
     <>
-      {item.author === user._id ? (
+      {item.author._id === user._id ? (
         <div className="message" id="message-outbound">
           <p className="message-text">{item.message}</p>
           <p id="message-timestamp">{formatDateTime(new Date(item.dateTime))}</p>

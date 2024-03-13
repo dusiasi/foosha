@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+
 import controllerUser from './controllers/users';
 import controllerItems from './controllers/items';
 import controllerMessages from './controllers/messages';
@@ -16,14 +17,6 @@ router.get('/items/:id', controllerItems.itemById); // in use
 router.put('/items/:id', controllerItems.editItem); // in use
 router.delete('/items/:id', controllerItems.deleteItem); // in use
 
-router.post('/messages', controllerMessages.postMessage); // in use
-router.get('/messages', controllerMessages.allMessages); // in use
-
-router.post('/conversations', controllerConversations.postConversation); // in use
-router.get('/conversations', controllerConversations.allConversations); // in use
-router.get(
-  '/conversations/:id/:contact',
-  controllerConversations.getConversationByItemId
-); // in use
+router.post('/items/messages', controllerMessages.postMessage); // in use
 
 export default router;

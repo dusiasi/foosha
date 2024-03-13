@@ -64,22 +64,13 @@ export default function ContextProvider({ children }: PropsWithChildren) {
   const [messageList, setMessageList] = useState<Message[]>([]);
   const [location, setLocation] = useState<Location>(initialLocation);
 
-  // init of the app:
-  // fetch location of user:
-  // fetch data lists:
-
   useEffect(() => {
     async function fetchAndSet() {
       fetchUserLocation(setLocation);
       const itemData = await getAllItems();
-      const convoData = await getAllConversations();
-      const messageData = await getAllMessages();
       const sortedItems = sortByDate(itemData, 'date');
-      const sortedConvos = sortByDate(convoData, 'date');
-      const sortedMessages = sortByDate(messageData, 'dateTime');
-      setList(sortedItems);
-      setConversationList(sortedConvos);
-      setMessageList(sortedMessages);
+      setList(itemData);
+
     }
     fetchAndSet();
   }, []);

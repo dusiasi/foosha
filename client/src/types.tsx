@@ -13,36 +13,31 @@ export type Item = {
   _id: string;
   title: string;
   description: string;
-  owner: string;
+  owner: User;
   date: Date;
-  location: Location; // [longitude, latitude]
+  location: Location;
+  conversations: Conversation[];
   locationName: string;
   available: boolean;
   image?: string; // Optional property
 };
 
-export type initialState = {
-  message: string;
-  author: string;
-  thread: string;
-  dateTime: Date;
-};
 
 export type Message = {
   _id: string;
   message: string;
-  author: string; // user _id of sender
-  thread: string; // conversation _id which this message is about
+  author: User;
+  owner: User;// user _id of sender
+  itemId: string;
   read: boolean;
   dateTime: number; // Date
 };
 
 export type Conversation = {
   _id: string;
-  itemName: string; // item name which this conversation is about
-  itemId: string; // item _id which this conversation is about
-  itemImage: string; // item image which this conversation is about
-  contact: User; // user _id of the contacting person
+  messages: Message[];
+  item: Item; // item name which this conversation is about
+  sender: User; // user _id of the contacting person
   owner: User;
   date: Date; // date of conversation start
 };

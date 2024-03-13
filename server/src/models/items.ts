@@ -1,47 +1,43 @@
-import mongoose from './index';
-import { User } from './users';
+import { InferSchemaType } from "mongoose";
+import mongoose from "./index";
 
-export type Item = {
-  title: string;
-  description: string;
-  owner: User;
-  date: Date;
-  location: {
-    type: 'Point';
-    coordinates: number[];
-  };
-  locationName: string;
-  available: boolean;
-  image?: string;
-};
+export type ItemType = InferSchemaType<typeof Item>;
 
 // defining data structure
-const Item = new mongoose.Schema<Item>({
+const Item = new mongoose.Schema({
   title: String,
   description: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
+    ref: "users",
     required: true,
   },
   date: { type: Date, default: Date.now() },
   location: {
     type: {
       type: String,
-      enum: ['Point'],
-      required: true,
+      enum: ["Point"],
+      // required: true,
     },
     coordinates: {
       type: [Number], // [lng, lat]
-      required: true,
+      // required: true,
     },
   },
+  conversations: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "conversations",
+    },
+  ],
   locationName: String,
   available: { type: Boolean, default: true },
   image: String,
 });
 
-Item.index({ location: '2dsphere' });
-const ItemModel = mongoose.model('items', Item);
+Item.index({ location: "2dsphere" });
+const ItemModel = mongoose.model("items", Item);
 
 export default ItemModel;
+
+//65ef050866b63835a2cc903d
