@@ -58,7 +58,6 @@ export const allItems = async (req: Request, res: Response) => {
       ],
     });
 
-
     res.status(200);
     res.send(items);
     // return res.body;

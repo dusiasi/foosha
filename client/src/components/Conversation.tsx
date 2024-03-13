@@ -75,7 +75,7 @@ useEffect(() => {
 
       {conversationArr.map((convo) =>
 
-      <div id="thread-with-chat">
+      <div id="thread-with-chat" key={convo._id}>
         <div id="thread">
           <img src={convo.item.image} id="thread-image" />
           <div id="thread-info">
