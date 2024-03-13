@@ -14,3 +14,5 @@ app.use(router);
 app.listen(config.port, () =>
   console.log(`Servers listening on port ${config.port}`)
 );
+
+export default app;
