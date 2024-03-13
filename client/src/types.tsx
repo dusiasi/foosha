@@ -36,7 +36,7 @@ export type Message = {
 export type Conversation = {
   _id: string;
   message: Message[];
-  item: string; // item name which this conversation is about
+  item: Item; // item name which this conversation is about
   sender: string; // user _id of the contacting person
   owner: string;
   date: Date; // date of conversation start
