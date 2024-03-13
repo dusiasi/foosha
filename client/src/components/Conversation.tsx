@@ -62,18 +62,14 @@ function Conversation({ item: item }: { item: Item }) {
     }
   }
 
-// show the messages belonging to each conversation
-// useEffect(() => {
-//   const mappedConversations = list.flatMap((item) => item.conversations);
-//    const filteredConvos = mappedConversations.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
-//   setConversationArr(filteredConvos);
-  // }, [list]);
 
 useEffect(() => {
-  const mappedConversations = list.flatMap((item) => item.conversations);
-   const filteredConvos = mappedConversations.filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id);
+  const mappedItems = list.flatMap((item) => item.conversations);
+  const filteredConvos = mappedItems.filter((convo) => convo.sender === user._id || convo.owner === user._id);
   setConversationArr(filteredConvos);
 }, [list]);
+console.log(conversationArr)
+
 
   // show the contact info on the conversation
   // useEffect(() => {
@@ -88,25 +84,25 @@ useEffect(() => {
   // }, []);
 
 
-  return (
-    list.map((item) => {
-      return (
-        <div>
-          <p>{item.title}</p>
-          <img src={item.image} />
-          {item.conversations
-            .filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id)
-            .map((conversation) => (
-              <div key={conversation._id}>
-                {conversation.message.map((message: MessageType) => (
-                    <p key={message._id}>{message.message}</p>
-                  ))}
-              </div>
-            ))}
-        </div>
-      );
-    })
-  );
+  // return (
+  //   list.map((item) => {
+  //     return (
+  //       <div>
+  //         <p>{item.title}</p>
+  //         <img src={item.image} />
+  //         {item.conversations
+  //           .filter((convo) => convo.sender._id === user._id || convo.owner._id === user._id)
+  //           .map((conversation) => (
+  //             <div key={conversation._id}>
+  //               {conversation.message.map((message: MessageType) => (
+  //                   <p key={message._id}>{message.message}</p>
+  //                 ))}
+  //             </div>
+  //           ))}
+  //       </div>
+  //     );
+  //   })
+  // );
 
 
   // return (
