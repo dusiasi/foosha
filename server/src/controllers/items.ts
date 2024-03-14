@@ -4,15 +4,34 @@ import { Request, Response } from "express";
 // posting new item to database
 export const postItem = async (req: Request, res: Response) => {
   try {
-    const { title, description, owner, date, available, locationName, image } =
-      req.body;
-    const { lat, lng } = req.body.location;
+    const {
+      title,
+      description,
+      owner,
+      date,
+      available,
+      locationName,
+      image,
+      location,
+    } = req.body;
+
+    // Ensure location is provided and has the expected properties
+    if (
+      !location ||
+      typeof location.lat !== "number" ||
+      typeof location.lng !== "number"
+    ) {
+      return res
+        .status(400)
+        .send({ message: "Invalid or missing location data." });
+    }
+
     const newItem = new ItemModel({
       title,
       description,
       location: {
         type: "Point",
-        coordinates: [lng, lat],
+        coordinates: [location.lng, location.lat], // Using the corrected structure
       },
       locationName,
       owner,
@@ -20,18 +39,48 @@ export const postItem = async (req: Request, res: Response) => {
       available,
       image,
     });
-    newItem.save();
-    res.send(newItem);
-    res.status(201);
+
+    await newItem.save(); // Await the save operation
+
+    res.status(201).send(newItem); // Set status then send the response
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send({
+    res.status(500).send({
       message:
         "An unexpected error occurred while posting the item. Please try again later.",
     });
   }
 };
+// export const postItem = async (req: Request, res: Response) => {
+//   try {
+//     const { title, description, owner, date, available, locationName, image } =
+//       req.body;
+//     const { lat, lng } = req.body.location;
+//     const newItem = new ItemModel({
+//       title,
+//       description,
+//       location: {
+//         type: "Point",
+//         coordinates: [lng, lat],
+//       },
+//       locationName,
+//       owner,
+//       date,
+//       available,
+//       image,
+//     });
+//     newItem.save();
+//     res.send(newItem);
+//     res.status(201);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500);
+//     res.send({
+//       message:
+//         "An unexpected error occurred while posting the item. Please try again later.",
+//     });
+//   }
+// };
 
 // getting all items from database
 export const allItems = async (req: Request, res: Response) => {
@@ -45,15 +94,15 @@ export const allItems = async (req: Request, res: Response) => {
         },
         {
           path: "item",
-          select: "image title"
+          select: "image title",
         },
         {
           path: "owner",
-          select: "image name"
+          select: "image name",
         },
         {
           path: "sender",
-          select: "image name"
+          select: "image name",
         },
       ],
     });
