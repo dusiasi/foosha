@@ -12,72 +12,115 @@ app.use(router);
 // invokes supertest with our app
 const request = supertest(app);
 
-describe('Integration tests', () => {
+describe('Integration test User Component', () => {
+  const userData = {
+    name: 'test1',
+    email: 'test@example.com',
+    password: 'password123',
+  };
   beforeAll(async () => {
     await mongoose.disconnect();
     const url = `mongodb://localhost:27017/${databaseName}`;
     await mongoose.connect(url);
+    await UserModel.deleteMany();
   });
 
   afterEach(async () => {
     await UserModel.deleteMany();
+  });
+
+  afterAll(async () => {
     await mongoose.disconnect();
   });
 
-  it('should create a new user', async () => {
-    const userData = {
-      email: 'test@example.com',
-      password: 'password123',
-    };
+  describe('create User', () => {
+    it('should create a new user if the user does not exist', async () => {
+      const res = await request.post('/user').send(userData);
+      expect(res.statusCode).toBe(201);
 
-    // Send a POST request to create a new user
-    const response = await request.post('/user').send(userData).expect(201); // Expecting a 201 Created response
+      const user = await UserModel.findOne({ email: userData.email });
 
-    // Check if the response contains the newly created user
-    expect(response.body).toHaveProperty('email', userData.email);
-    console.log(response.body);
-    // expect(response.body).not.toHaveProperty('password'); // Ensure password is not returned
+      expect(user?.email).toBe(userData.email);
+    });
+
+    it('should not create a user, if the user already exists', async () => {
+      // Add logic to ensure user exists
+      await UserModel.create(userData);
+
+      const res = await request.post('/user').send(userData);
+      expect(res.statusCode).toBe(409);
+    });
+
+    it('should throw an error if the password field is empty', async () => {
+      const userData = {
+        name: 'test',
+        email: 'tes@example.com',
+        password: '',
+      };
+
+      const res = await request.post('/user').send(userData);
+      expect(res.statusCode).toBe(400);
+    });
   });
 
-  // it('should return 409 if user already exists', async () => {
-  //   const existingUser = {
-  //     email: 'existing@example.com',
-  //     password: 'password123',
-  //   };
+  describe('user login', () => {
+    // did not check the hashed password
+    it('should login if email is provided and if it exists', async () => {
+      const res = await request.post('/user/login').send(userData);
+      const user = await UserModel.findOne({
+        email: userData.email,
+      });
 
-  //   // Create an existing user in the database
-  //   await UserModel.create(existingUser);
+      if (user) expect(res.statusCode).toBe(200);
+    });
 
-  //   // Try to create the same user again
-  //   const response = await request.post('/user').send(existingUser).expect(409); // Expecting a 409 Conflict response
+    it('should not login, if email or password is not provided', async () => {
+      const userData2 = {
+        name: 'test1',
+        email: '',
+        password: '',
+      };
+      const res = await request.post('/user/login').send(userData2);
+      expect(res.statusCode).toBe(401);
+    });
+    it('should not login, if the user with the email does not exist', async () => {
+      const userData3 = {
+        name: 'test3',
+        email: 'test3@example.com',
+        password: 'password1234',
+      };
+      const res = await request.post('/user/login').send(userData3);
+      expect(res.statusCode).toBe(400);
+    });
+  });
 
-  //   // Check if the response contains the error message
-  //   expect(response.body.error).toBe('409');
-  //   expect(response.body.message).toBe('User already exists');
-  // });
+  describe('Get user by id', () => {
+    beforeEach(async () => {
+      // Insert test user into the database before each test
+      await UserModel.create(userData);
+    });
+    it('should get the user by id', async () => {
+      const user = await UserModel.findOne({ email: userData.email });
+      const id = user?._id;
 
-  // it('should return 400 if password is empty', async () => {
-  //   const userData = {
-  //     email: 'test@example.com',
-  //     password: '', // Empty password
-  //   };
+      const res = await request.get(`/user/${id}`);
+      expect(res.statusCode).toBe(200);
+    });
+  });
 
-  //   // Send a POST request with empty password
-  //   const response = await request.post('/user').send(userData).expect(400); // Expecting a 400 Bad Request response
-
-  //   // Check if the response contains the error message
-  //   expect(response.body.error).toBeDefined();
-  //   expect(response.body.message).toBe('Could not create user');
-  // });
-  // it('should save a user to the database', async () => {
-  //   const email = 'elelele@yahoo';
-  //   const res = await request
-  //     .post('/user')
-  //     .set('Accept', 'application/json')
-  //     .send({ email: email });
-
-  //   const user = await UserModel.findOne({ email: email });
-  //   console.log(user);
-  //   expect(user?.email).toBe(email);
-  // });
+  describe('edit user', () => {
+    it('should edit the user', async () => {
+      const userDataUpdate = {
+        name: 'testupdate',
+        email: 'test@example.com',
+        password: '1234',
+        status: '',
+        image: '',
+        preferences: '',
+      };
+      const id = '65f2dc355d1130123ebdfc16';
+      const res = await request.put(`/user/${id}`).send(userDataUpdate);
+      expect(res.statusCode).toBe(201);
+    });
+  });
 });

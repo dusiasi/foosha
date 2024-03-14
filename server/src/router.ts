@@ -4,7 +4,6 @@ const router = express.Router();
 import controllerUser from './controllers/users';
 import controllerItems from './controllers/items';
 import controllerMessages from './controllers/messages';
-import controllerConversations from './controllers/conversations';
 
 router.post('/user', controllerUser.createUser); // in use
 router.post('/user/login', controllerUser.login); // in use
