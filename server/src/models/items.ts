@@ -1,10 +1,10 @@
-import { InferSchemaType } from "mongoose";
+import { InferSchemaType, Schema, model } from "mongoose";
 import mongoose from "./index";
 
 export type ItemType = InferSchemaType<typeof Item>;
 
 // defining data structure
-const Item = new mongoose.Schema({
+const Item = new Schema({
   title: String,
   description: String,
   owner: {
@@ -36,7 +36,7 @@ const Item = new mongoose.Schema({
 });
 
 Item.index({ location: "2dsphere" });
-const ItemModel = mongoose.model("items", Item);
+const ItemModel = model("items", Item);
 
 export default ItemModel;
 

@@ -1,9 +1,8 @@
-import MessageModel from '../models/messages';
-import { Request, Response } from 'express';
-import ItemModel from '../models/items';
-import ConversationModel from '../models/conversations';
-import conversations from './conversations';
-import mongoose, { ObjectId } from 'mongoose';
+import MessageModel from "../models/messages";
+import { Request, Response } from "express";
+import ItemModel from "../models/items";
+import ConversationModel from "../models/conversations";
+import mongoose from "mongoose";
 
 // posting new message to database
 export const postMessage = async (req: Request, res: Response) => {
@@ -12,9 +11,9 @@ export const postMessage = async (req: Request, res: Response) => {
 
     const item = await ItemModel.findOne({
       _id: itemId,
-    }).populate({ path: 'conversations', model: 'conversations' });
+    }).populate({ path: "conversations", model: "conversations" });
 
-    if (!item) return res.send('No item found').status(401);
+    if (!item) return res.send("No item found").status(401);
 
     let convoWithUser;
     for (const convoId of item.conversations) {
@@ -23,7 +22,7 @@ export const postMessage = async (req: Request, res: Response) => {
         conversation &&
         conversation.sender?.equals(new mongoose.Types.ObjectId(author))
       ) {
-        console.log('TRUE!!');
+        console.log("TRUE!!");
         convoWithUser = conversation;
         break;
       }
@@ -55,16 +54,16 @@ export const postMessage = async (req: Request, res: Response) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while creating the conversation. Please try again later.',
+        "An unexpected error occurred while creating the conversation. Please try again later.",
     });
   }
 };
 
 // getting all messages from database
 export const allMessages = async (req: Request, res: Response) => {
-  console.log('messages requested ---------------');
+  console.log("messages requested ---------------");
   try {
-    const messages = await MessageModel.find().populate('author').exec();
+    const messages = await MessageModel.find().populate("author").exec();
     res.status(200);
     res.json(messages);
   } catch (error) {
@@ -72,7 +71,7 @@ export const allMessages = async (req: Request, res: Response) => {
     res.status(500);
     res.send({
       message:
-        'An unexpected error occurred while getting the messages. Please try again later.',
+        "An unexpected error occurred while getting the messages. Please try again later.",
     });
   }
 };
