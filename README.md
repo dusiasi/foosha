@@ -17,6 +17,15 @@ To collaborate, fork this repo and clone it into a local repository. Run `npm in
 The client is started by running `npm run dev` from the client root folder. 
 To connect your own database, you might want to adapt `server/model/index.js` locally.
 
+## Our contribution
+During the legacy group project, our team undertook significant improvements to enhance Foosha's robustness and scalability. Here are the key enhancements made:
+
+Code Refactoring: We conducted a thorough refactor of the codebase, restructuring it to improve readability and maintainability.
+
+TypeScript Migration: We migrated the codebase from JavaScript to TypeScript, leveraging TypeScript's static typing capabilities to catch errors early and enhance code quality.
+
+Test Implementation: We added some unit tests to the application.
+
 ### Ideas for further development
 
 - Sorting conversations by newest message and highlight unread messages
