@@ -24,7 +24,7 @@ The client is started by running `npm run dev` from the client root folder.
 To connect your own database, you might want to adapt `server/model/index.js` locally.
 
 ## Contributors
-During the legacy group project, our team undertook significant improvements to enhance Foosha's robustness and scalability. Here are the key enhancements made:
+During the legacy group project, our team worked on:
 
 Code Refactoring: We conducted a thorough refactor of the codebase, restructuring it to improve readability and maintainability.
 
