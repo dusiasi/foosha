@@ -1,9 +1,9 @@
-## ProjectTitle:
+## Foosha
 Foosha is a foodsharing app designed for mobile use. 
 
 It is a project which was created within one week at Codeworks software engineering immersive bootcamp, and it will be developed further by collaborators wihthin this course.
 
-## Getting started:
+## Getting started
 ### Login screen, main list and my list
 <img width="200" alt="Screenshot 2024-03-06 at 10 16 46" src="https://github.com/JayCeeKay1991/foosha/assets/70958275/bea1685c-a757-4114-b44a-e57091adb4b1">
 <img width="200" alt="Screenshot 2024-03-06 at 10 17 07" src="https://github.com/JayCeeKay1991/foosha/assets/70958275/667e33ca-d9c5-4cb8-96a1-0b2075ccbb72">
