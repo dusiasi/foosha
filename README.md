@@ -23,7 +23,7 @@ To collaborate, fork this repo and clone it into a local repository. Run `npm in
 The client is started by running `npm run dev` from the client root folder. 
 To connect your own database, you might want to adapt `server/model/index.js` locally.
 
-## Contributors
+## Contributions
 During the legacy group project, our team worked on:
 
 Code Refactoring: We conducted a thorough refactor of the codebase, restructuring it to improve readability and maintainability.
