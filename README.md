@@ -14,8 +14,8 @@ It is a project which was created within one week at Codeworks software engineer
 <img width="200" alt="Screenshot 2024-03-06 at 10 24 03" src="https://github.com/JayCeeKay1991/foosha/assets/70958275/197a40f8-6922-4bc3-9410-aa9d07984f35">
 
 ## Tech Stack
-Frontend: React, Typescript, Vanilla Css
-Backend: Node.js (Express.js), Typescript
+Frontend: React, Typescript, Vanilla Css, Figma, Cloudinary 
+Backend: Node.js (Express.js),MongoDB(Mongoose), Typescript
 
 ## Collaborate
 
