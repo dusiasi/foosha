@@ -22,7 +22,7 @@ During the legacy group project, our team undertook significant improvements to 
 
 Code Refactoring: We conducted a thorough refactor of the codebase, restructuring it to improve readability and maintainability.
 
-TypeScript Migration: We migrated the codebase from JavaScript to TypeScript, leveraging TypeScript's static typing capabilities to catch errors early and enhance code quality.
+TypeScript Migration: We migrated the codebase from JavaScript to TypeScript.
 
 Test Implementation: We added some unit tests to the application.
 
